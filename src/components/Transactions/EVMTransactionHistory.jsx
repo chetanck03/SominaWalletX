@@ -430,13 +430,13 @@ function EVMTransactionHistory({ walletAddress, blockchain, network, useContract
                         {isContractMode ? (
                           <>
                             <p>• All transactions go through your deployed smart contract</p>
-                            <p>• Transaction hashes link directly to BaseScan for verification</p>
+                            <p>• Transaction hashes link directly to Somnia Explorer for verification</p>
                             <p>• Complete transaction history is stored on-chain</p>
                           </>
                         ) : (
                           <>
-                            <p>• Base uses public RPC endpoints for optimal performance</p>
-                            <p>• Detailed transaction history is available on BaseScan</p>
+                            <p>• Somnia uses public RPC endpoints for optimal performance</p>
+                            <p>• Detailed transaction history is available on Somnia Explorer</p>
                             <p>• New transactions will trigger automatic balance updates</p>
                           </>
                         )}

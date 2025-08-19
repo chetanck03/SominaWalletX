@@ -1,24 +1,17 @@
-// Network configuration for Base blockchain
+// Network configuration for Somnia blockchain
 export const NETWORK_CONFIGS = {
-  base: {
-    id: 'base',
-    name: 'Base',
-    symbol: 'ETH',
-    coinType: 60, // Base uses Ethereum's coin type
+  somnia: {
+    id: 'somnia',
+    name: 'Somnia',
+    symbol: 'STT',
+    coinType: 60, // Somnia uses Ethereum's coin type (EVM compatible)
     networks: {
-      mainnet: {
-        name: 'Base Mainnet',
-        chainId: 8453,
-        rpcUrl: import.meta.env.VITE_BASE_MAINNET_RPC_URL,
-        explorerUrl: 'https://basescan.org',
-        faucetUrl: null
-      },
-      sepolia: {
-        name: 'Base Sepolia',
-        chainId: 84532,
-        rpcUrl: import.meta.env.VITE_BASE_SEPOLIA_RPC_URL,
-        explorerUrl: 'https://sepolia.basescan.org',
-        faucetUrl: 'https://portal.cdp.coinbase.com/products/faucet'
+      testnet: {
+        name: 'Somnia Shannon Testnet',
+        chainId: 50312, // Somnia Shannon testnet chain ID
+        rpcUrl: import.meta.env.VITE_SOMNIA_TESTNET_RPC_URL,
+        explorerUrl: 'https://shannon-explorer.somnia.network',
+        faucetUrl: 'https://faucet.trade/somnia-shannon-stt-faucet'
       }
     }
   }

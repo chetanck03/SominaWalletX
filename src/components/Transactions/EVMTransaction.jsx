@@ -39,9 +39,9 @@ function EVMTransaction({ walletData, blockchain }) {
   const [sending, setSending] = useState(false)
   const [transactionStatus, setTransactionStatus] = useState('')
   
-  // Contract mode state - automatically use contract for Base Sepolia
+  // Contract mode state - automatically use contract for Somnia testnet
   const [useContract, setUseContract] = useState(() => {
-    return blockchain === 'base' && network === 'sepolia' && WALLET_MANAGER_ADDRESS
+    return blockchain === 'somnia' && network === 'testnet' && WALLET_MANAGER_ADDRESS
   })
 
   const blockchainConfig = getBlockchainConfig(blockchain)
@@ -95,8 +95,8 @@ function EVMTransaction({ walletData, blockchain }) {
 
 
   useEffect(() => {
-    // Auto-enable contract mode for Base Sepolia
-    const shouldUseContract = blockchain === 'base' && network === 'sepolia' && WALLET_MANAGER_ADDRESS
+    // Auto-enable contract mode for Somnia Testnet
+    const shouldUseContract = blockchain === 'somnia' && network === 'testnet' && WALLET_MANAGER_ADDRESS
     setUseContract(shouldUseContract)
     
     if (blockchainConfig) {
@@ -256,8 +256,8 @@ function EVMTransaction({ walletData, blockchain }) {
     setNetwork(newNetwork)
     setSendForm({ to: '', amount: '', gasLimit: '21000' })
     
-    // Auto-enable contract mode for Base Sepolia
-    const shouldUseContract = blockchain === 'base' && newNetwork === 'sepolia' && WALLET_MANAGER_ADDRESS
+    // Auto-enable contract mode for Somnia testnet
+    const shouldUseContract = blockchain === 'somnia' && newNetwork === 'testnet' && WALLET_MANAGER_ADDRESS
     setUseContract(shouldUseContract)
   }
 

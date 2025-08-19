@@ -9,7 +9,8 @@ import WalletComponent from './Wallet/Wallet'
 import { loadSharedEVMSeedPhrase } from '../lib/sharedEVMStorage'
 import { isEVMCompatible } from '../lib/networks'
 
-import baseLogo from '../assests/base-logo.svg'
+// We'll use a generic blockchain icon since we don't have a specific Somnia logo
+import ethereumLogo from '../assests/ethereum-eth-logo.svg' // Using Ethereum logo as a placeholder for Somnia
 
 function Dashboard() {
   const [selectedBlockchain, setSelectedBlockchain] = useState(null)
@@ -38,13 +39,13 @@ function Dashboard() {
 
   const blockchains = [
     {
-      id: 'base',
-      name: 'Base',
-      symbol: 'ETH',
-      logo: baseLogo,
-      description: 'Coinbase\'s L2 blockchain built on Ethereum - Fast, secure, and developer-friendly',
-      color: 'from-blue-500 to-blue-700',
-      features: ['Ultra Low Fees', 'Lightning Fast', 'EVM Compatible', 'Coinbase Ecosystem']
+      id: 'somnia',
+      name: 'Somnia',
+      symbol: 'STT',
+      logo: ethereumLogo, // Using Ethereum logo as a placeholder for Somnia
+      description: 'High-performance blockchain supporting over 1 million transactions per second',
+      color: 'from-purple-500 to-blue-700',
+      features: ['High Performance', 'Lightning Fast', 'EVM Compatible', '1M+ TPS']
     }
   ]
 
@@ -86,25 +87,25 @@ function Dashboard() {
             <h2 className="font-geist text-3xl bg-clip-text text-transparent bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)]">
               Currently Supporting{' '}
               <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                Base
+                Somnia
               </span>
             </h2>
             <p className="text-sm md:text-lg text-gray-400 mb-4">
-              Currently supporting Base blockchain with more blockchains coming soon. Experience the power of Base - Coinbase's Layer 2 solution built for speed, security, and seamless user experience.
+              Currently supporting Somnia blockchain with more blockchains coming soon. Experience the power of Somnia - a high-performance blockchain supporting over 1 million transactions per second.
             </p>
 
-            {/* Base Blockchain Info */}
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600/10 to-neutral-800/20 border border-blue-500/20 rounded-xl p-4 sm:p-6 mb-8">
+            {/* Somnia Blockchain Info */}
+            <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600/10 to-neutral-800/20 border border-purple-500/20 rounded-xl p-4 sm:p-6 mb-8">
               <div className="flex flex-col sm:flex-row items-start gap-3">
                 <div className="flex items-center gap-2 text-purple-400 mt-1 flex-shrink-0">
                   <Link className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="font-semibold text-sm sm:text-base">Base Blockchain</span>
+                  <span className="font-semibold text-sm sm:text-base">Somnia Blockchain</span>
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                    Base is Coinbase's Layer 2 blockchain built on Ethereum, offering <strong className="text-white">ultra-low fees and lightning-fast transactions</strong>.
-                    As an EVM-compatible chain, Base provides seamless integration with existing Ethereum tools and dApps while delivering superior performance.
-                    Perfect for DeFi, NFTs, and Web3 applications with enterprise-grade security backed by Coinbase. <strong className="text-purple-400">More blockchains will be supported in future updates.</strong>
+                    Somnia is a high-performance blockchain offering <strong className="text-white">lightning-fast transactions with over 1 million TPS</strong>.
+                    As an EVM-compatible chain, Somnia provides seamless integration with existing Ethereum tools and dApps while delivering superior performance.
+                    Perfect for DeFi, NFTs, and Web3 applications with enterprise-grade security and scalability. <strong className="text-purple-400">More blockchains will be supported in future updates.</strong>
                   </p>
                 </div>
               </div>

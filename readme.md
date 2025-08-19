@@ -197,24 +197,21 @@ npm run build
 Create a `.env` file in the root directory with the following configuration:
 
 ```bash
-# Base Network Configuration (Alchemy RPC URLs)
-VITE_BASE_MAINNET_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY
-VITE_BASE_SEPOLIA_RPC_URL=https://base-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY
+# Somnia Network Configuration
+VITE_SOMNIA_TESTNET_RPC_URL=https://rpc.ankr.com/somnia_testnet/927d128d8548157e8c3734680403cabda3b4312dda11df480c63c2e0c2dbb8d4
 
-# Smart Contract Address (Base Sepolia)
+# Smart Contract Address (Somnia Testnet)
 VITE_WALLET_MANAGER_CONTRACT_ADDRESS=0xd1d8344642d3dEFa36167f48f90E0D5a557A80b3
 ```
-
-**🔑 Get Your Alchemy API Key:**
-1. Visit [Alchemy Dashboard](https://dashboard.alchemy.com/)
-2. Create a new app for Base Mainnet and Base Sepolia
-3. Copy your API key and replace `YOUR_ALCHEMY_API_KEY`
 
 **📋 Copy from .env.example:**
 ```bash
 cp .env.example .env
-# Then edit .env with your Alchemy API keys
 ```
+
+**🔑 Get Somnia Testnet Tokens:**
+1. Visit [Somnia Shannon STT Faucet](https://faucet.trade/somnia-shannon-stt-faucet)
+2. Follow the instructions to receive free STT tokens for testing
 
 ## 🌍 **Deployment**
 
@@ -238,17 +235,17 @@ npm run build
 
 ## 🎯 **Roadmap & Future Plans**
 
-### **Phase 1: Base Foundation** ✅
-- [x] Base blockchain integration
+### **Phase 1: Somnia Foundation** ✅
+- [x] Somnia blockchain integration
 - [x] Smart contract deployment
 - [x] Core wallet functionality
 - [x] Transaction management
 
-### **Phase 2: Multi-Chain Expansion** 🚧
-- [ ] Ethereum mainnet support
-- [ ] Polygon integration
-- [ ] Avalanche support
-- [ ] BNB Smart Chain compatibility
+### **Phase 2: Advanced Features** 🚧
+- [ ] Multi-wallet support
+- [ ] Enhanced transaction history
+- [ ] DApp integration
+- [ ] NFT support
 
 ### **Phase 3: Advanced Features** 📋
 - [ ] DeFi protocol integration
@@ -266,8 +263,9 @@ npm run build
 
 ## 📊 **Onchain Metrics & Impact**
 
-### **Base Blockspace Demand**
-- Smart contract transactions for ETH transfers
+### **Somnia Network Performance**
+- Smart contract transactions for STT transfers
+- Support for 1M+ transactions per second
 - Transaction history recording onchain
 - Balance update operations
 - Event emission for transparency

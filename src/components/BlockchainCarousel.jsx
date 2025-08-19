@@ -1,26 +1,18 @@
 import React from 'react';
 import { CheckCircle, Network } from 'lucide-react';
 
-// Import Base logo
+// We'll use a generic blockchain icon since we don't have a specific Somnia logo
+// You can replace this with a Somnia logo if available later
 import baseLogo from '../assests/base-logo.svg';
-
 const BlockchainCarousel = () => {
-    const baseNetworks = [
+    const somniaNetworks = [
         {
-            name: "Base Mainnet",
-            description: "Production network for real transactions",
-            chainId: "8453",
-            rpc: "https://mainnet.base.org",
-            explorer: "https://basescan.org",
-            features: ["Live Network", "Real ETH", "Production Ready"]
-        },
-        {
-            name: "Base Sepolia",
+            name: "Somnia Shannon Testnet",
             description: "Test network for development and testing",
-            chainId: "84532", 
-            rpc: "https://sepolia.base.org",
-            explorer: "https://sepolia.basescan.org",
-            features: ["Test Network", "Free ETH", "Development"]
+            chainId: "50312", // Somnia Shannon testnet chain ID
+            rpc: "https://rpc.ankr.com/somnia_testnet/927d128d8548157e8c3734680403cabda3b4312dda11df480c63c2e0c2dbb8d4",
+            explorer: "https://shannon-explorer.somnia.network", // Somnia Shannon testnet explorer URL
+            features: ["Test Network", "Free STT", "Development", "1M+ TPS"]
         }
     ];
 
@@ -33,17 +25,17 @@ const BlockchainCarousel = () => {
                     <h2 className="font-geist mx-auto bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)] bg-clip-text text-2xl md:text-3xl lg:text-4xl tracking-tighter text-transparent leading-tight mb-4">
                         Powered by{' '}
                         <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                            Base Blockchain
+                            Somnia Blockchain
                         </span>
                     </h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                        Built on Coinbase's Layer 2 solution - supporting both mainnet and testnet environments
+                        Built on Somnia's high-performance blockchain - supporting over 1 million transactions per second
                     </p>
                 </div>
 
-                {/* Base Networks Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    {baseNetworks.map((network, index) => (
+                {/* Somnia Networks Grid */}
+                <div className="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+                    {somniaNetworks.map((network, index) => (
                         <div
                             key={network.name}
                             className="group relative"

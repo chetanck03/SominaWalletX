@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Wallet, Github, ChevronDown } from 'lucide-react'
-import baseLogo from '../assests/base-logo.svg'
+// We'll use a generic blockchain icon since we don't have a specific Somnia logo
+import ethereumLogo from '../assests/ethereum-eth-logo.svg' // Using Ethereum logo as a placeholder for Somnia
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -251,15 +252,15 @@ function Navbar() {
   }
 
   const blockchains = [
-    // Base Network - Primary Focus
+    // Somnia Network - Primary Focus
     {
-      id: 'base',
-      name: 'Base',
-      symbol: 'ETH',
-      color: 'from-blue-400 to-blue-500',
-      textColor: 'text-blue-300',
-      bgColor: 'bg-blue-400/10',
-      logo: baseLogo,
+      id: 'somnia',
+      name: 'Somnia',
+      symbol: 'STT',
+      color: 'from-purple-400 to-blue-500',
+      textColor: 'text-purple-300',
+      bgColor: 'bg-purple-400/10',
+      logo: ethereumLogo,
       available: true
     },
 
