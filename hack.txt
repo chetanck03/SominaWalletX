@@ -1,0 +1,201 @@
+Build. Launch. Scale. Earn.
+
+This summer, we're recognizing the most impactful onchain applications that bring people around the world onchain. The Onchain Summer Awards is a retroactive awards campaign designed to spotlight the most innovative, engaging, and widely-used mini apps and consumer apps across the Base ecosystem.
+image
+
+From July 9 to August 25, we’ll be tracking key engagement metrics to identify and celebrate the apps and people that are leading the charge in bringing the next billion users onchain.
+image
+
+The top teams will earn prizes, and/or an invitation to Basecamp where they will be spotlighted during our live OCS Awards Ceremony.
+image
+
+Builder Award Categories
+Live Apps
+Top Live Mini Apps
+Awarded to the top 5 most successful onchain mini apps overall, based on engagement and usage metrics.
+
+Top Live Consumer Apps
+Awarded to the top 5 highest-performing full-featured consumer apps driving sustained user engagement and onchain activity.
+
+New Apps
+Top New Mini Apps
+Awarded to the top 5 newly launched mini apps (after July 1, 2025) that show exceptional traction and early adoption.
+
+Top New Consumer Apps
+Awarded to the top 5 newly launched consumer apps (after July 1, 2025) that demonstrate breakout momentum.
+
+Note: Live apps are considered apps built and launched before July 1st 2025. New apps are apps that can be built and launched after July 1st 2025.
+image
+
+What impact will be rewarded?
+Winners in each category will be determined based on onchain engagement data, including (but not limited to):
+
+Demand generated for Base Blockspace
+Interactions from repeat Base users
+Interactions from Base users with high trust scores
+Interactions of new Base users
+Transaction Volume
+Open Source license of contract code
+All metrics will be measured on Base, retroactively evaluated from the program start date through the end of the campaign.
+
+*We reserve the right to update this criteria at any time without notice.
+image
+
+Timeline
+Program Duration: July 9 – August 25, 2025
+Winners Announced: Early September
+image
+Prizes
+The top 5 teams in each category will receive a prize from Base:
+
+1st: $25,000
+2nd: $10,000
+3rd: $7,500
+4th: $5,000
+5th: $2,500
+In addition, top teams will be invited to attend Basecamp this fall and will be spotlighted onstage during the livestreamed OCS Awards Ceremony.
+
+Global Prizes
+A total of 30 additional top apps will earn $1k each across the four categories.
+
+image
+
+Weekly OCS Live Spotlight
+Each week one app will be featured during a livestream where they will be able to demo their application, and gain exposure to a broader audience. Applications will be selected on a rolling basis.
+image
+
+Why It Matters
+The Onchain Summer Awards is a celebration of both existing and new teams whose creations move us forward and provides:
+
+🎤 Spotlight: The top teams and builders will be featured during the live OCS Awards Ceremony during Basecamp
+🏆 Prizes: Earn prizes based on performance
+🤝 Network: Join the Base core team, fellow builders and creators live at Bascamp this fall.
+image
+Disclaimer
+By using our services, you acknowledge and agree that all IP addresses and Ethereum wallet addresses are subject to screening against U.S. Department of the Treasury’s Office of Foreign Assets Control (OFAC) lists. By accessing our services, you attest that you are not subject to any sanctions and are not on any OFAC lists, and we reserve the right to block transactions or interactions involving individuals, entities, or countries that are subject to U.S. sanctions.
+
+By participating in this contest, you acknowledge and agree to the Official Rules here.
+
+Rules
+
+Follow the Code of Conduct.
+
+Find us on
+
+$201,000
+Available in Prizes
+Onchain Summer Awards
+Onchain Summer Awards
+
+$201,000
+
+All prizes
+
+FAQs
+Search FAQs
+Team size
+
+1 - 5
+
+Registration costs?
+
+Nada.
+
+
+How do I register?
+
+When can I register?
+
+How big can my team be?
+
+What impact will be rewarded?
+
+How many projects can I submit?
+
+Can I submit an old project or something that I've already built?
+
+My mini app is also a consumer app, which track should I submit to?
+
+Prize Pool
+
+$201,000
+
+Organizer
+
+
+Onchain Summer Awards
+
+Upto $201,000
+
+Search for a partner or a track
+
+Filters
+
+Logo of Onchain Summer Awards
+Onchain Summer Awards
+$201,000
+
+Tracks
+
+
+$50,000: Top Live Mini Apps
+
+
+$50,000: Top Live Consumer Apps
+
+
+$50,000: Top New Mini Apps
+
+
+$50,000: Top New Consumer Apps
+
+
+$1,000: Global Prizes
+
+We love software and the people who build it.
+
+telegram
+twitter
+discord
+dribbble
+github
+linkedin
+farcaster
+Community
+
+Organize a hackathon
+
+Explore hackathons
+
+Code of Conduct
+
+Brand Assets
+
+Documentation
+
+Company
+
+About
+
+Blog
+
+Careers
+
+Changelog
+
+Privacy
+
+Terms
+
+Support
+
+HelpCopy email address
+
+Status
+
+Contact usCopy email address
+
+Devfolio Brand
+Never Stop Building Wrench
+© 2025, NSB Classic PTE LTD
+
