@@ -172,7 +172,7 @@ function getEscrowDetails(uint256 escrowId) external view returns (...)
 ### **🚀 1-Minute Setup**
 ```bash
 # Clone and run instantly
-git clone https://github.com/chetanck03/baseWalletX
+git clone https://github.com/chetanck03/SominaWalletX/baseWalletX
 cd baseWalletx
 npm install
 npm run dev
@@ -191,7 +191,7 @@ npm run dev
 #### **Installation Steps**
 ```bash
 # 1. Clone the repository
-git clone https://github.com/chetanck03/baseWalletX
+git clone https://github.com/chetanck03/SominaWalletX/baseWalletX
 cd baeWalletx
 
 # 2. Install dependencies
@@ -365,8 +365,8 @@ WalletX is proudly participating in the Onchain Summer Awards 2025, competing in
 
 ## 📞 **Contact & Support**
 
-- **GitHub**: [WalletX Repository](https://github.com/chetanck03/baseWalletX)
-- **Issues**: [Report Issues](https://github.com/chetanck03/baseWalletX/issues)
+- **GitHub**: [WalletX Repository](https://github.com/chetanck03/SominaWalletX/baseWalletX)
+- **Issues**: [Report Issues](https://github.com/chetanck03/SominaWalletX/baseWalletX/issues)
 - **Email**: [chetanck3210@gmail.com](mailto:chetanck3210@gmail.com)
 - **Instagram**: [@chetanck_03](https://instagram.com/chetanck_03)
 - **Discord**: chetanck_03

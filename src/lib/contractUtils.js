@@ -20,7 +20,8 @@ export { getWalletXContractAddress as WALLETX_CONTRACT_ADDRESS } from './contrac
 export {
     createEscrow,
     claimEscrow,
-    refundEscrow
+    refundEscrow,
+    debugEscrow
 } from './contractOperations'
 
 // Contract data fetching

@@ -207,18 +207,58 @@ export const claimEscrow = async (blockchain, network, privateKey, escrowId, gas
         
         // Validate escrow exists and is claimable
         try {
+            console.log(`🔍 Fetching escrow details for ID: ${escrowId}`)
+            
+            // Validate escrow ID format
+            if (!escrowId || escrowId === '0' || isNaN(parseInt(escrowId))) {
+                throw new Error(`Invalid escrow ID: ${escrowId}`)
+            }
+            
             const escrowDetails = await contract.getEscrowDetails(escrowId)
+            console.log('📋 Raw escrow details:', escrowDetails)
+            
+            // Check if escrow exists (sender should not be zero address)
+            if (escrowDetails.sender === '0x0000000000000000000000000000000000000000') {
+                throw new Error(`Escrow #${escrowId} does not exist`)
+            }
+            
             const wallet = new ethers.Wallet(privateKey)
             const claimer = wallet.address
             
+            // Log detailed validation info
+            console.log('🔐 Validation details:', {
+                escrowId,
+                sender: escrowDetails.sender,
+                receiver: escrowDetails.receiver,
+                amount: ethers.formatEther(escrowDetails.amount),
+                status: Number(escrowDetails.status),
+                claimer,
+                isCorrectReceiver: escrowDetails.receiver.toLowerCase() === claimer.toLowerCase(),
+                isPending: Number(escrowDetails.status) === EscrowStatus.PENDING
+            })
+            
+            // Check if the claimer is the correct receiver
             if (escrowDetails.receiver.toLowerCase() !== claimer.toLowerCase()) {
-                throw new Error("Only the escrow receiver can claim this escrow")
+                throw new Error(`Only the escrow receiver can claim this escrow. Expected: ${escrowDetails.receiver}, Got: ${claimer}`)
             }
             
-            if (escrowDetails.status !== EscrowStatus.PENDING) {
-                throw new Error("This escrow is not available for claiming")
+            // Check if the escrow is in pending status
+            const currentStatus = Number(escrowDetails.status)
+            if (currentStatus !== EscrowStatus.PENDING) {
+                const statusText = currentStatus === EscrowStatus.CLAIMED ? 'already claimed' :
+                                 currentStatus === EscrowStatus.REFUNDED ? 'already refunded' : 'unknown status'
+                throw new Error(`This escrow is not available for claiming (${statusText}). Current status: ${currentStatus}`)
             }
+            
+            // Check if escrow has valid amount
+            if (escrowDetails.amount.toString() === '0') {
+                throw new Error('This escrow has no funds to claim')
+            }
+            
+            console.log('✅ Escrow validation passed - proceeding with claim')
+            
         } catch (detailError) {
+            console.error('❌ Escrow validation failed:', detailError)
             throw new Error(`Cannot validate escrow: ${detailError.message}`)
         }
 
@@ -285,18 +325,47 @@ export const refundEscrow = async (blockchain, network, privateKey, escrowId, ga
         
         // Validate escrow exists and is refundable
         try {
+            console.log(`🔍 Fetching escrow details for refund ID: ${escrowId}`)
             const escrowDetails = await contract.getEscrowDetails(escrowId)
+            console.log('📋 Raw escrow details for refund:', escrowDetails)
+            
             const wallet = new ethers.Wallet(privateKey)
             const refunder = wallet.address
             
+            // Log detailed validation info
+            console.log('🔐 Refund validation details:', {
+                escrowId,
+                sender: escrowDetails.sender,
+                receiver: escrowDetails.receiver,
+                amount: ethers.formatEther(escrowDetails.amount),
+                status: Number(escrowDetails.status),
+                refunder,
+                isCorrectSender: escrowDetails.sender.toLowerCase() === refunder.toLowerCase(),
+                isPending: Number(escrowDetails.status) === EscrowStatus.PENDING
+            })
+            
+            // Check if the refunder is the correct sender
             if (escrowDetails.sender.toLowerCase() !== refunder.toLowerCase()) {
-                throw new Error("Only the escrow sender can refund this escrow")
+                throw new Error(`Only the escrow sender can refund this escrow. Expected: ${escrowDetails.sender}, Got: ${refunder}`)
             }
             
-            if (escrowDetails.status !== EscrowStatus.PENDING) {
-                throw new Error("This escrow is not available for refunding")
+            // Check if the escrow is in pending status
+            const currentStatus = Number(escrowDetails.status)
+            if (currentStatus !== EscrowStatus.PENDING) {
+                const statusText = currentStatus === EscrowStatus.CLAIMED ? 'already claimed' :
+                                 currentStatus === EscrowStatus.REFUNDED ? 'already refunded' : 'unknown status'
+                throw new Error(`This escrow is not available for refunding (${statusText}). Current status: ${currentStatus}`)
             }
+            
+            // Check if escrow has valid amount
+            if (escrowDetails.amount.toString() === '0') {
+                throw new Error('This escrow has no funds to refund')
+            }
+            
+            console.log('✅ Escrow refund validation passed - proceeding with refund')
+            
         } catch (detailError) {
+            console.error('❌ Escrow refund validation failed:', detailError)
             throw new Error(`Cannot validate escrow: ${detailError.message}`)
         }
 
@@ -337,5 +406,84 @@ export const refundEscrow = async (blockchain, network, privateKey, escrowId, ga
         const errorMessage = handleContractError(error, 'refund escrow')
         console.error("Error refunding escrow:", error)
         throw new Error(errorMessage)
+    }
+}
+
+/**
+ * Debug function to inspect escrow details (can be called from console)
+ * @param {string} blockchain - The blockchain name
+ * @param {string} network - The network name 
+ * @param {string} escrowId - The escrow ID to inspect
+ * @param {string} walletAddress - The wallet address trying to claim/refund
+ * @returns {Promise<Object>} Debug information
+ */
+export const debugEscrow = async (blockchain, network, escrowId, walletAddress) => {
+    try {
+        console.log(`🔍 🚾 DEBUG: Inspecting escrow #${escrowId} for wallet ${walletAddress}`)
+        
+        const contract = getWalletXContract(blockchain, network)
+        
+        // Get escrow details
+        const escrowDetails = await contract.getEscrowDetails(escrowId)
+        
+        // Get all escrows for this address
+        const sentEscrows = await contract.getUserSentEscrows(walletAddress)
+        const receivedEscrows = await contract.getUserReceivedEscrows(walletAddress)
+        
+        // Get pending actions
+        const pendingActions = await contract.getPendingActions(walletAddress)
+        
+        const debugInfo = {
+            escrowId,
+            walletAddress,
+            escrowDetails: {
+                sender: escrowDetails.sender,
+                receiver: escrowDetails.receiver,
+                amount: ethers.formatEther(escrowDetails.amount),
+                status: Number(escrowDetails.status),
+                statusText: Number(escrowDetails.status) === 0 ? 'PENDING' : 
+                           Number(escrowDetails.status) === 1 ? 'CLAIMED' : 
+                           Number(escrowDetails.status) === 2 ? 'REFUNDED' : 'UNKNOWN',
+                createdAt: Number(escrowDetails.createdAt),
+                claimedAt: Number(escrowDetails.claimedAt),
+                refundedAt: Number(escrowDetails.refundedAt)
+            },
+            userEscrows: {
+                sent: sentEscrows.map(id => id.toString()),
+                received: receivedEscrows.map(id => id.toString())
+            },
+            pendingActions: {
+                claimable: pendingActions[0].map(id => id.toString()),
+                refundable: pendingActions[1].map(id => id.toString())
+            },
+            canClaim: (
+                escrowDetails.receiver.toLowerCase() === walletAddress.toLowerCase() &&
+                Number(escrowDetails.status) === 0 &&
+                escrowDetails.amount.toString() !== '0'
+            ),
+            canRefund: (
+                escrowDetails.sender.toLowerCase() === walletAddress.toLowerCase() &&
+                Number(escrowDetails.status) === 0 &&
+                escrowDetails.amount.toString() !== '0'
+            )
+        }
+        
+        console.log('📋 DEBUG RESULTS:', debugInfo)
+        
+        // Additional validations
+        console.log('🔍 VALIDATION CHECKS:')
+        console.log(`- Escrow exists: ${escrowDetails.sender !== '0x0000000000000000000000000000000000000000'}`)
+        console.log(`- Is receiver: ${escrowDetails.receiver.toLowerCase() === walletAddress.toLowerCase()}`)
+        console.log(`- Is sender: ${escrowDetails.sender.toLowerCase() === walletAddress.toLowerCase()}`)
+        console.log(`- Status is PENDING: ${Number(escrowDetails.status) === 0}`)
+        console.log(`- Has funds: ${escrowDetails.amount.toString() !== '0'}`)
+        console.log(`- In received list: ${receivedEscrows.map(id => id.toString()).includes(escrowId.toString())}`)
+        console.log(`- In sent list: ${sentEscrows.map(id => id.toString()).includes(escrowId.toString())}`)
+        
+        return debugInfo
+        
+    } catch (error) {
+        console.error('❌ DEBUG ERROR:', error)
+        throw error
     }
 }

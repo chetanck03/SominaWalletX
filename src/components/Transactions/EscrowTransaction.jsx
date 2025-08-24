@@ -29,7 +29,8 @@ import {
   getEscrowStatusColor,
   formatTimestamp,
   EscrowStatus,
-  WALLETX_CONTRACT_ADDRESS 
+  WALLETX_CONTRACT_ADDRESS,
+  debugEscrow
 } from '../../lib/contractUtils'
 import baseLogo from '../../assests/logo.svg'
 import polygonLogo from '../../assests/polygon-matic-logo.svg'
@@ -152,6 +153,14 @@ function EscrowTransaction({ walletData, blockchain }) {
     if (blockchainConfig) {
       fetchBalance()
       fetchEscrowData()
+    }
+    
+    // Make debug function available in console
+    if (typeof window !== 'undefined') {
+      window.debugEscrow = (escrowId) => {
+        return debugEscrow(blockchain, network, escrowId, walletData.publicKey)
+      }
+      console.log('🔧 Debug helper available: window.debugEscrow(escrowId)')
     }
   }, [walletData.publicKey, network, blockchain])
 
@@ -589,10 +598,10 @@ function EscrowTransaction({ walletData, blockchain }) {
                 </div>
               </div>
 
-              <div className="bg-blue-600/20 border border-blue-600/30 rounded-lg p-4">
+              <div className="bg-purple-600/20 border border-purple-600/30 rounded-lg p-4">
                 <div className="flex items-start gap-2">
-                  <Shield className="text-blue-400 mt-0.5" size={16} />
-                  <div className="text-sm text-blue-300">
+                  <Shield className="text-purple-400 mt-0.5" size={16} />
+                  <div className="text-sm text-purple-300">
                     <p className="font-medium">Escrow Protection</p>
                     <p>Funds will be held securely in the smart contract. The recipient can claim them, or you can refund if unclaimed.</p>
                   </div>
@@ -817,7 +826,8 @@ function EscrowActionCard({ escrowId, type, blockchain, network, onAction, loadi
           </div>
           <div>
             <h4 className={`font-semibold text-sm ${isClaimAction ? 'text-green-300' : 'text-red-300'}`}>
-              Escrow #{escrowId}
+              {/* Escrow #{escrowId} */}
+              Escrow
             </h4>
             <p className="text-xs text-gray-400">
               {isClaimAction ? 'From' : 'To'}: {(isClaimAction ? escrowDetails.sender : escrowDetails.receiver).slice(0, 6)}...{(isClaimAction ? escrowDetails.sender : escrowDetails.receiver).slice(-4)}
@@ -854,7 +864,7 @@ function EscrowActionCard({ escrowId, type, blockchain, network, onAction, loadi
         
         <button
           onClick={() => openExplorer(escrowDetails.hash)}
-          className="px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 hover:text-blue-300 border border-blue-600/30 rounded-lg transition-colors text-sm"
+          className="px-3 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 hover:text-purple-300 border border-purple-600/30 rounded-lg transition-colors text-sm"
         >
           <ExternalLink size={14} />
         </button>
@@ -883,7 +893,7 @@ function EscrowHistoryCard({ transaction, blockchainSymbol, openExplorer }) {
   const getTypeColor = (type) => {
     switch (type) {
       case 'escrow_created':
-        return 'text-blue-400 bg-blue-600/20 border-blue-600/30'
+        return 'text-red-400 bg-red-600/20 border-red-600/30'
       case 'escrow_received':
         return 'text-green-400 bg-green-600/20 border-green-600/30'
       case 'escrow_claimed':
@@ -936,7 +946,7 @@ function EscrowHistoryCard({ transaction, blockchainSymbol, openExplorer }) {
               </p>
               {transaction.escrowId && (
                 <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-purple-600/20 text-purple-400 border border-purple-600/30">
-                  #{transaction.escrowId}
+                  {/* #{transaction.escrowId} */}STT Tokens
                 </span>
               )}
               <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getEscrowStatusColor(transaction.status)}`}>
@@ -969,9 +979,9 @@ function EscrowHistoryCard({ transaction, blockchainSymbol, openExplorer }) {
         <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto">
           <div className="text-left sm:text-right">
             <p className={`font-bold text-base sm:text-lg font-geist break-all ${
-              transaction.isIncoming ? 'text-green-400' : 'text-blue-400'
+              transaction.isIncoming ? 'text-green-400' : 'text-red-400'
             }`}>
-              {transaction.isIncoming ? '+' : ''}{transaction.amount} {blockchainSymbol}
+              {transaction.isIncoming ? '+' : '-'}{transaction.amount} {blockchainSymbol}
             </p>
             <p className="text-xs text-gray-400 mt-1 font-geist">
               {transaction.isIncoming ? 'Received' : 'Sent'}
