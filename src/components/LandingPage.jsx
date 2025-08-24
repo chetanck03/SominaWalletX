@@ -31,7 +31,6 @@ function LandingPage() {
     "Currently supporting Somnia with Ethereum, Polygon, Avalanche, BNB Smart Chain & Solana coming soon",
     "Import existing wallets with 12/24-word mnemonic validation",
     "Create unlimited addresses from single seed or generate fresh ones",
-    "Seamless network switching between mainnets and testnets",
     "Integrated testnet faucets for free development tokens",
     "Complete transaction history with blockchain explorer integration",
     "Advanced temporary wallet features for maximum privacy",
@@ -106,7 +105,7 @@ function LandingPage() {
               </h2>
 
               <p className="mx-auto max-w-3xl text-xs sm:text-lg text-gray-300 leading-relaxed px-4">
-                Easily create or import Hierarchical Deterministic (HD) wallets, manage multiple addresses from a single seed phrase, create secure escrow agreements, and interact with <span className='text-purple-400 font-semibold'>Somnia Blockchain</span> — all within a secure, non-custodial platform supporting both testnet and mainnet networks. <span className="text-purple-400 font-semibold">More blockchains coming soon!</span>
+                Easily create or import Hierarchical Deterministic (HD) wallets, manage multiple addresses from a single seed phrase, create secure escrow agreements, and interact with <span className='text-purple-400 font-semibold'>Somnia Blockchain</span> — all within a secure, non-custodial platform supporting somnia testnet network. <span className="text-purple-400 font-semibold">More blockchains coming soon!</span>
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center  sm:gap-4 pt-4">

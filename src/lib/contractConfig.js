@@ -361,7 +361,7 @@ export const getWalletXContractAddress = () => {
 	}
 	
 	// Fallback to hardcoded address
-	const fallbackAddress = "0xd1d8344642d3dEFa36167f48f90E0D5a557A80b3"
+	const fallbackAddress = "0x60Dfc970af7409EEEB7520C5DF2dfD7E89734790"
 	
 	if (!ethers.isAddress(fallbackAddress)) {
 		throw new Error("Invalid WalletX contract address configuration")

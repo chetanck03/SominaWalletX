@@ -97,7 +97,7 @@ function AboutPage() {
                 In the digital age, we use temporary phone numbers for privacy, disposable emails for security,
                 and burner accounts for anonymity. WalletX brings this revolutionary concept to cryptocurrency with
                 professional-grade temporary wallets, currently supporting <span className="text-purple-400 font-semibold">Somnia Blockchain</span> with <span className="text-purple-400 font-semibold">6 major blockchain networks planned</span> 
-                that don't compromise on features or security.
+                 that don't compromise on features or security.
               </p>
               <p className="text-sm md:text-lg text-gray-300 mb-6 leading-relaxed">
                 Our groundbreaking <span className="text-purple-400 font-semibold">EVM Shared Seed technology</span> is designed so that 
@@ -412,7 +412,7 @@ function AboutPage() {
 
             <div className="flex flex-wrap justify-center gap-6">
               <a
-                href="https://github.com"
+                href="https://github.com/chetanck03/SominaWalletX" target="_blank"
                 className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
