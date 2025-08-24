@@ -1,6 +1,26 @@
 import React, { useState } from 'react'
-import { Send, Mail, MessageSquare, MapPin, Clock, Phone } from 'lucide-react'
+import { Send, Mail, MessageSquare, MapPin, Clock, Phone, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import emailjs from '@emailjs/browser'
+
+/**
+ * EmailJS Setup Instructions:
+ * 
+ * 1. Create an account at https://www.emailjs.com/
+ * 2. Create a new service (Gmail, Outlook, etc.)
+ * 3. Create an email template with these parameters:
+ *    - {{from_name}} - Sender's name
+ *    - {{from_email}} - Sender's email
+ *    - {{subject}} - Email subject
+ *    - {{message}} - Email message
+ *    - {{to_name}} - Recipient name (SominaWalletX Team)
+ *    - {{reply_to}} - Reply-to email
+ * 4. Get your Service ID, Template ID, and Public Key from EmailJS dashboard
+ * 5. Add them to your .env file:
+ *    - VITE_EMAILJS_SERVICE_ID=your_service_id
+ *    - VITE_EMAILJS_TEMPLATE_ID=your_template_id
+ *    - VITE_EMAILJS_PUBLIC_KEY=your_public_key
+ */
 
 // ContactForm component that can be used both as a section and as a full page
 function ContactForm({ isFullPage = false }) {
@@ -10,6 +30,15 @@ function ContactForm({ isFullPage = false }) {
     subject: '',
     message: ''
   })
+  
+  const [isLoading, setIsLoading] = useState(false)
+  
+  // EmailJS configuration from environment variables
+  const emailjsConfig = {
+    serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -18,18 +47,68 @@ function ContactForm({ isFullPage = false }) {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    })
-    // Show success message (you can implement this)
-    toast('Thank you for your message! We\'ll get back to you soon.')
+    
+    // Check if EmailJS is configured
+    if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
+      toast.error('Email service is not configured. Please check environment variables.')
+      console.error('EmailJS configuration missing:', emailjsConfig)
+      return
+    }
+    
+    setIsLoading(true)
+    
+    try {
+      // Initialize EmailJS with public key
+      emailjs.init(emailjsConfig.publicKey)
+      
+      // Prepare template parameters
+      const templateParams = {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_name: 'SominaWalletX Team',
+        reply_to: formData.email
+      }
+      
+      console.log('Sending email with params:', templateParams)
+      
+      // Send email using EmailJS
+      const response = await emailjs.send(
+        emailjsConfig.serviceId,
+        emailjsConfig.templateId,
+        templateParams
+      )
+      
+      console.log('Email sent successfully:', response)
+      
+      // Show success message
+      toast.success('Message sent successfully! We\'ll get back to you soon.')
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      })
+      
+    } catch (error) {
+      console.error('Email sending failed:', error)
+      
+      // Show error message based on error type
+      if (error.text) {
+        toast.error(`Failed to send message: ${error.text}`)
+      } else if (error.message) {
+        toast.error(`Failed to send message: ${error.message}`)
+      } else {
+        toast.error('Failed to send message. Please try again or contact us directly.')
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const contactMethods = [
@@ -167,8 +246,9 @@ function ContactForm({ isFullPage = false }) {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        disabled={isLoading}
                         required
-                        className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="Your name"
                       />
                     </div>
@@ -183,8 +263,9 @@ function ContactForm({ isFullPage = false }) {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        disabled={isLoading}
                         required
-                        className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -200,8 +281,9 @@ function ContactForm({ isFullPage = false }) {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
+                      disabled={isLoading}
                       required
-                      className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="What's this about?"
                     />
                   </div>
@@ -215,9 +297,10 @@ function ContactForm({ isFullPage = false }) {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
+                      disabled={isLoading}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
+                      className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="Tell us more about your inquiry..."
                     />
                   </div>
@@ -228,10 +311,20 @@ function ContactForm({ isFullPage = false }) {
                     <div className="flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 backdrop-blur-3xl">
                       <button
                         type="submit"
-                        className="group flex items-center justify-center rounded-full border-[1px] border-transparent bg-gradient-to-tr from-zinc-300/5 via-purple-400/20 to-transparent px-8 py-3 text-center text-white transition-colors hover:bg-transparent/90 text-base font-medium w-full"
+                        disabled={isLoading}
+                        className="group flex items-center justify-center rounded-full border-[1px] border-transparent bg-gradient-to-tr from-zinc-300/5 via-purple-400/20 to-transparent px-8 py-3 text-center text-white transition-colors hover:bg-transparent/90 text-base font-medium w-full disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        Send Message
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            Send Message
+                          </>
+                        )}
                       </button>
                     </div>
                   </span>
@@ -355,8 +448,9 @@ function ContactForm({ isFullPage = false }) {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  disabled={isLoading}
                   required
-                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Your name"
                 />
               </div>
@@ -371,8 +465,9 @@ function ContactForm({ isFullPage = false }) {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  disabled={isLoading}
                   required
-                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="your@email.com"
                 />
               </div>
@@ -386,9 +481,10 @@ function ContactForm({ isFullPage = false }) {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
+                  disabled={isLoading}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
+                  className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Tell us what's on your mind..."
                 />
               </div>
@@ -399,10 +495,20 @@ function ContactForm({ isFullPage = false }) {
                 <div className="flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 backdrop-blur-3xl">
                   <button
                     type="submit"
-                    className="group flex items-center justify-center rounded-full border-[1px] border-transparent bg-gradient-to-tr from-zinc-300/5 via-purple-400/20 to-transparent px-8 py-3 text-center text-white transition-colors hover:bg-transparent/90 text-base font-medium w-full"
+                    disabled={isLoading}
+                    className="group flex items-center justify-center rounded-full border-[1px] border-transparent bg-gradient-to-tr from-zinc-300/5 via-purple-400/20 to-transparent px-8 py-3 text-center text-white transition-colors hover:bg-transparent/90 text-base font-medium w-full disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    Send Message
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        Send Message
+                      </>
+                    )}
                   </button>
                 </div>
               </span>

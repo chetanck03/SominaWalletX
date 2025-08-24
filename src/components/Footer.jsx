@@ -22,7 +22,7 @@ function Footer() {
               </span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Your secure, multi-blockchain wallet manager. Generate, store, and manage your crypto wallets with ease across Ethereum and Solana networks.
+              Your revolutionary multi-chain wallet manager for the Somnia ecosystem. Generate, manage, and secure your crypto wallets with advanced escrow functionality and lightning-fast transactions.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
