@@ -108,7 +108,7 @@ Traditional wallets lock you into permanent addresses and long-term commitments.
 
 ## 🌟 **Live Demo & Smart Contract**
 
-- **🌐 Live Application**: [SominaWalletX on Vercel](https://somina-wallet-x.vercel.app)
+- **🌐 Live Application**: [SominaWalletX on Vercel](https://somnia-wallet-x.vercel.app/)
 - **📜 WalletX Escrow Contract**: `0x60Dfc970af7409EEEB7520C5DF2dfD7E89734790` (Somnia Shannon Testnet)
 - **🔍 Contract Explorer**: [View on Somnia Explorer](https://shannon-explorer.somnia.network/address/0x60Dfc970af7409EEEB7520C5DF2dfD7E89734790?tab=index)
 - **⚡ Somnia RPC Integration**: Ultra-fast 1M+ TPS with sub-second finality
@@ -338,7 +338,7 @@ npm install
 npm run dev
 ```
 
-**🌐 Or try the live demo**: [SominaWalletX Live App](https://somina-wallet-x.vercel.app/)
+**🌐 Or try the live demo**: [SominaWalletX Live App](https://somnia-wallet-x.vercel.app/)
 
 ### **🔧 Full Development Setup**
 
