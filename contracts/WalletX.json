@@ -1,42 +1,80 @@
 [
 	{
-		"inputs": [],
-		"name": "emergencyWithdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
-				"internalType": "address payable",
-				"name": "to",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
 			}
 		],
-		"name": "sendETH",
+		"name": "claim",
 		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"stateMutability": "nonpayable",
-		"type": "constructor"
+		"type": "function"
 	},
 	{
 		"anonymous": false,
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
 				"internalType": "address",
-				"name": "from",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "at",
+				"type": "uint256"
+			}
+		],
+		"name": "Claimed",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			}
+		],
+		"name": "createEscrow",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "to",
+				"name": "receiver",
 				"type": "address"
 			},
 			{
@@ -44,76 +82,53 @@
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "transactionId",
-				"type": "bytes32"
 			}
 		],
-		"name": "TransferExecuted",
+		"name": "EscrowCreated",
 		"type": "event"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "fallback"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
 			}
 		],
-		"name": "updateWalletBalance",
+		"name": "refund",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"stateMutability": "payable",
-		"type": "receive"
-	},
-	{
-		"inputs": [],
-		"name": "getContractInfo",
-		"outputs": [
+		"anonymous": false,
+		"inputs": [
 			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
 				"internalType": "address",
-				"name": "",
+				"name": "sender",
 				"type": "address"
 			},
 			{
+				"indexed": false,
 				"internalType": "uint256",
-				"name": "",
+				"name": "at",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
+		"name": "Refunded",
+		"type": "event"
 	},
 	{
 		"inputs": [],
-		"name": "getContractStats",
+		"name": "escrowCount",
 		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
 			{
 				"internalType": "uint256",
 				"name": "",
@@ -126,12 +141,134 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address[]",
-				"name": "wallets",
-				"type": "address[]"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "getMultipleBalances",
+		"name": "escrows",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum WalletX.EscrowStatus",
+				"name": "status",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "createdAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "claimedAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "refundedAt",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "escrowId",
+				"type": "uint256"
+			}
+		],
+		"name": "getEscrowDetails",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum WalletX.EscrowStatus",
+				"name": "status",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "createdAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "claimedAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "refundedAt",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getPendingActions",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "claimable",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "refundable",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getUserReceivedEscrows",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
@@ -146,187 +283,35 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "wallet",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getUserSentEscrows",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "getTransactionByIndex",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "transactionId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bool",
-						"name": "isIncoming",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct WalletManager.Transaction",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			}
-		],
-		"name": "getTransactionCount",
-		"outputs": [
-			{
-				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "limit",
-				"type": "uint256"
-			}
-		],
-		"name": "getTransactionHistory",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "transactionId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bool",
-						"name": "isIncoming",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct WalletManager.Transaction[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			}
-		],
-		"name": "getWalletBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "hasContractBalance",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "walletBalances",
+		"name": "receivedEscrows",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -350,37 +335,12 @@
 				"type": "uint256"
 			}
 		],
-		"name": "walletTransactions",
+		"name": "sentEscrows",
 		"outputs": [
 			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "transactionId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bool",
-				"name": "isIncoming",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",

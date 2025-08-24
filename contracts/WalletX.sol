@@ -1,217 +1,130 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
-/**
- * @title WalletManager
- * @dev A smart contract that manages wallet operations for the hackathon project
- * This contract provides functionality for sending ETH, tracking balances, and maintaining transaction history
- * NO REGISTRATION REQUIRED - Anyone can use all functions
- */
-contract WalletManager {
-    // Events
-    event TransferExecuted(
-        address indexed from,
-        address indexed to,
-        uint256 amount,
-        uint256 timestamp,
-        bytes32 indexed transactionId
-    );
-    
-    // Structs
-    struct Transaction {
-        address from;
-        address to;
+contract WalletX {
+    enum EscrowStatus { Pending, Claimed, Refunded }
+
+    struct Escrow {
+        address sender;
+        address receiver;
         uint256 amount;
-        uint256 timestamp;
-        bytes32 transactionId;
-        bool isIncoming;
+        EscrowStatus status;
+        uint256 createdAt;
+        uint256 claimedAt;
+        uint256 refundedAt;
     }
-    
-    // State variables
-    mapping(address => Transaction[]) public walletTransactions;
-    mapping(address => uint256) public walletBalances;
-    
-    // Contract owner
-    address public owner;
-    
-    // Modifiers
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
-        _;
-    }
-    
-    constructor() {
-        owner = msg.sender;
-    }
-    
 
-    
-    /**
-     * @dev Send ETH to another address through the contract
-     * @param to The recipient address
-     */
-    function sendETH(address payable to) external payable {
-        require(to != address(0), "Invalid recipient address");
-        require(msg.value > 0, "Amount must be greater than 0");
-        
-        // Generate transaction ID
-        bytes32 transactionId = keccak256(
-            abi.encodePacked(msg.sender, to, msg.value, block.timestamp, block.number)
-        );
-        
-        // Record transaction for sender (outgoing) - always record
-        walletTransactions[msg.sender].push(Transaction({
-            from: msg.sender,
-            to: to,
-            amount: msg.value,
-            timestamp: block.timestamp,
-            transactionId: transactionId,
-            isIncoming: false
-        }));
-        
-        // Record transaction for recipient (incoming) - always record
-        walletTransactions[to].push(Transaction({
-            from: msg.sender,
-            to: to,
-            amount: msg.value,
-            timestamp: block.timestamp,
-            transactionId: transactionId,
-            isIncoming: true
-        }));
-        
-        // Execute the transfer
-        to.transfer(msg.value);
-        
-        // Update balance cache after transfer
-        walletBalances[msg.sender] = msg.sender.balance;
-        walletBalances[to] = to.balance;
-        
-        emit TransferExecuted(msg.sender, to, msg.value, block.timestamp, transactionId);
-    }
-    
-    /**
-     * @dev Get the current balance of a wallet
-     * @param wallet The wallet address to check
-     * @return The current balance in wei
-     */
-    function getWalletBalance(address wallet) external view returns (uint256) {
-        return wallet.balance;
-    }
-    
-    /**
-     * @dev Get transaction history for a wallet
-     * @param wallet The wallet address
-     * @param limit Maximum number of transactions to return (0 for all)
-     * @return Array of transactions
-     */
-    function getTransactionHistory(address wallet, uint256 limit) 
-        external 
-        view 
-        returns (Transaction[] memory) 
-    {
-        Transaction[] storage transactions = walletTransactions[wallet];
-        uint256 length = transactions.length;
-        
-        if (limit == 0 || limit > length) {
-            limit = length;
-        }
-        
-        Transaction[] memory result = new Transaction[](limit);
-        
-        // Return most recent transactions first
-        for (uint256 i = 0; i < limit; i++) {
-            result[i] = transactions[length - 1 - i];
-        }
-        
-        return result;
-    }
-    
-    /**
-     * @dev Get the total number of transactions for a wallet
-     * @param wallet The wallet address
-     * @return The total number of transactions
-     */
-    function getTransactionCount(address wallet) external view returns (uint256) {
-        return walletTransactions[wallet].length;
-    }
-    
+    uint256 public escrowCount;
+    mapping(uint256 => Escrow) public escrows;
+    mapping(address => uint256[]) public sentEscrows;
+    mapping(address => uint256[]) public receivedEscrows;
 
-    
-    /**
-     * @dev Get contract information
-     * @return owner address, contract balance
-     */
-    function getContractInfo() external view returns (address, uint256) {
-        return (owner, address(this).balance);
+    event EscrowCreated(uint256 indexed escrowId, address indexed sender, address indexed receiver, uint256 amount);
+    event Claimed(uint256 indexed escrowId, address indexed receiver, uint256 at);
+    event Refunded(uint256 indexed escrowId, address indexed sender, uint256 at);
+
+    // Create a new escrow (send ETH directly)
+    function createEscrow(address receiver) external payable returns (uint256) {
+        require(msg.value > 0, "Amount must be >0");
+        require(receiver != address(0), "Receiver required");
+
+        escrowCount += 1;
+        escrows[escrowCount] = Escrow({
+            sender: msg.sender,
+            receiver: receiver,
+            amount: msg.value,
+            status: EscrowStatus.Pending,
+            createdAt: block.timestamp,
+            claimedAt: 0,
+            refundedAt: 0
+        });
+
+        sentEscrows[msg.sender].push(escrowCount);
+        receivedEscrows[receiver].push(escrowCount);
+
+        emit EscrowCreated(escrowCount, msg.sender, receiver, msg.value);
+        return escrowCount;
     }
-    
-    /**
-     * @dev Emergency function to withdraw contract balance (only owner)
-     */
-    function emergencyWithdraw() external onlyOwner {
-        payable(owner).transfer(address(this).balance);
+
+    function claim(uint256 escrowId) external {
+        Escrow storage esc = escrows[escrowId];
+        require(esc.status == EscrowStatus.Pending, "Not claimable");
+        require(msg.sender == esc.receiver, "Only receiver can claim");
+
+        esc.status = EscrowStatus.Claimed;
+        esc.claimedAt = block.timestamp;
+
+        (bool success, ) = payable(esc.receiver).call{value: esc.amount}("");
+        require(success, "Claim transfer failed");
+
+        emit Claimed(escrowId, esc.receiver, esc.claimedAt);
     }
-    
-    /**
-     * @dev Update wallet balance cache (can be called by anyone to sync)
-     * @param wallet The wallet address to update
-     */
-    function updateWalletBalance(address wallet) external {
-        walletBalances[wallet] = wallet.balance;
+
+    function refund(uint256 escrowId) external {
+        Escrow storage esc = escrows[escrowId];
+        require(esc.status == EscrowStatus.Pending, "Not refundable");
+        require(msg.sender == esc.sender, "Only sender can refund");
+
+        esc.status = EscrowStatus.Refunded;
+        esc.refundedAt = block.timestamp;
+
+        (bool success, ) = payable(esc.sender).call{value: esc.amount}("");
+        require(success, "Refund transfer failed");
+
+        emit Refunded(escrowId, esc.sender, esc.refundedAt);
     }
-    
-    /**
-     * @dev Get multiple wallet balances at once
-     * @param wallets Array of wallet addresses
-     * @return Array of balances in wei
-     */
-    function getMultipleBalances(address[] calldata wallets) external view returns (uint256[] memory) {
-        uint256[] memory balances = new uint256[](wallets.length);
-        for (uint256 i = 0; i < wallets.length; i++) {
-            balances[i] = wallets[i].balance;
+
+    function getUserSentEscrows(address user) external view returns (uint256[] memory) {
+        return sentEscrows[user];
+    }
+
+    function getUserReceivedEscrows(address user) external view returns (uint256[] memory) {
+        return receivedEscrows[user];
+    }
+
+    function getEscrowDetails(uint256 escrowId) external view returns (
+        address sender,
+        address receiver,
+        uint256 amount,
+        EscrowStatus status,
+        uint256 createdAt,
+        uint256 claimedAt,
+        uint256 refundedAt
+    ) {
+        Escrow memory esc = escrows[escrowId];
+        return (esc.sender, esc.receiver, esc.amount, esc.status, esc.createdAt, esc.claimedAt, esc.refundedAt);
+    }
+
+    function getPendingActions(address user) external view returns (uint256[] memory claimable, uint256[] memory refundable) {
+        uint256 sentLength = sentEscrows[user].length;
+        uint256 receivedLength = receivedEscrows[user].length;
+        uint256[] memory tmpClaim = new uint256[](receivedLength);
+        uint256[] memory tmpRefund = new uint256[](sentLength);
+        uint256 c = 0;
+        uint256 r = 0;
+
+        for (uint256 i = 0; i < receivedLength; i++) {
+            uint256 eid = receivedEscrows[user][i];
+            if (escrows[eid].status == EscrowStatus.Pending) {
+                tmpClaim[c] = eid;
+                c++;
+            }
         }
-        return balances;
-    }
-    
-    /**
-     * @dev Get transaction by index for a wallet
-     * @param wallet The wallet address
-     * @param index The transaction index (0 = most recent)
-     * @return The transaction details
-     */
-    function getTransactionByIndex(address wallet, uint256 index) 
-        external 
-        view 
-        returns (Transaction memory) 
-    {
-        require(index < walletTransactions[wallet].length, "Transaction index out of bounds");
-        uint256 actualIndex = walletTransactions[wallet].length - 1 - index;
-        return walletTransactions[wallet][actualIndex];
-    }
-    
-    /**
-     * @dev Check if contract has enough ETH for operations
-     * @return True if contract has ETH balance
-     */
-    function hasContractBalance() external view returns (bool) {
-        return address(this).balance > 0;
-    }
-    
-    /**
-     * @dev Get contract statistics
-     * @return totalUsers, totalTransactions, contractBalance
-     */
-    function getContractStats() external view returns (uint256, uint256, uint256) {
-        // Simple implementation for hackathon
-        return (0, 0, address(this).balance);
-    }
-    
-    // Fallback function to receive ETH
-    receive() external payable {
-        // Allow contract to receive ETH
-    }
-    
-    fallback() external payable {
-        // Allow contract to receive ETH with data
+        for (uint256 i = 0; i < sentLength; i++) {
+            uint256 eid = sentEscrows[user][i];
+            if (escrows[eid].status == EscrowStatus.Pending) {
+                tmpRefund[r] = eid;
+                r++;
+            }
+        }
+        uint256[] memory claimableResult = new uint256[](c);
+        uint256[] memory refundableResult = new uint256[](r);
+        for (uint256 i = 0; i < c; i++) {
+            claimableResult[i] = tmpClaim[i];
+        }
+        for (uint256 i = 0; i < r; i++) {
+            refundableResult[i] = tmpRefund[i];
+        }
+        return (claimableResult, refundableResult);
     }
 }

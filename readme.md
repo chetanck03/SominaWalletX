@@ -61,14 +61,17 @@ WalletX isn't just another wallet - it's a **game-changing innovation** that bri
 - **Professional-grade BIP39/BIP44 compliance with industry standards**
 - **Future-ready architecture for cross-chain portfolio management**
 
-### 💰 **Transaction Management**
+### 💰 **Advanced Escrow & Transaction Management**
 
 ![Transaction Interface](./public/images/tx.png)
 
-- **Smart Contract Integration** - Custom WalletManager contract for enhanced transaction tracking
-- **Complete Transaction History** - Onchain transaction recording with detailed history
-- **Real-time Balance Updates** - Live balance tracking across all wallets
-- **Secure ETH Transfers** - Direct blockchain transactions with full transparency
+- **🛡️ Escrow Smart Contract** - Revolutionary WalletX escrow system for secure transactions
+- **🔒 Secure Fund Holding** - Funds held safely in smart contract until claimed or refunded
+- **📊 Tabbed Interface** - Send Escrow, Pending Actions, and Transaction History tabs
+- **⚡ Real-time Updates** - Live balance tracking and escrow status monitoring
+- **🔄 Claim & Refund System** - Recipients can claim, senders can refund unclaimed escrows
+- **📈 Complete History** - Detailed escrow transaction history with status tracking
+- **🎯 Pending Actions** - Clear view of claimable and refundable escrows
 
 ### 🛡️ **Enterprise-Grade Security**
 
@@ -119,22 +122,35 @@ buffer 6.0.3          - Secure data handling
 stream-browserify     - Stream processing
 ```
 
-## 📋 **Smart Contract Features**
+## 📋 **WalletX Escrow Smart Contract Features**
 
-Our custom `WalletManager` contract deployed on Base provides:
+Our revolutionary `WalletX` escrow contract provides advanced transaction security:
 
-- **ETH Transfer Functionality** - Secure peer-to-peer transactions
-- **Transaction History Tracking** - Onchain record of all transfers
-- **Balance Management** - Real-time balance updates
-- **Event Emission** - Transparent transaction logging
-- **Emergency Functions** - Owner-controlled safety features
+### 🛡️ **Core Escrow Functions**
+- **Create Escrow** - Lock ETH securely for a specific recipient
+- **Claim Escrow** - Recipients can claim their funds safely
+- **Refund Escrow** - Senders can refund unclaimed escrows
+- **Status Tracking** - Real-time escrow status (Pending/Claimed/Refunded)
+
+### 📊 **Advanced Query Functions**
+- **User Escrow History** - Get all sent and received escrows
+- **Pending Actions** - Find claimable and refundable escrows
+- **Detailed Information** - Complete escrow metadata and timestamps
 
 ```solidity
-// Key contract functions
-function sendETH(address payable to) external payable
-function getTransactionHistory(address wallet, uint256 limit) external view
-function getWalletBalance(address wallet) external view
+// Key escrow functions
+function createEscrow(address receiver) external payable returns (uint256)
+function claim(uint256 escrowId) external
+function refund(uint256 escrowId) external
+function getPendingActions(address user) external view returns (uint256[] claimable, uint256[] refundable)
+function getEscrowDetails(uint256 escrowId) external view returns (...)
 ```
+
+### 🔐 **Security Features**
+- **Access Control** - Only sender can refund, only receiver can claim
+- **Event Logging** - Complete transparency with blockchain events
+- **Status Management** - Prevents double-spending and unauthorized access
+- **Timestamp Tracking** - Full audit trail of all escrow actions
 
 ## 🎨 **User Experience**
 
@@ -200,9 +216,15 @@ Create a `.env` file in the root directory with the following configuration:
 # Somnia Network Configuration
 VITE_SOMNIA_TESTNET_RPC_URL=https://rpc.ankr.com/somnia_testnet/927d128d8548157e8c3734680403cabda3b4312dda11df480c63c2e0c2dbb8d4
 
-# Smart Contract Address (Somnia Testnet)
+# WalletX Escrow Smart Contract Address (Deploy your own)
+VITE_WALLETX_CONTRACT_ADDRESS=0xYourWalletXContractAddress
+
+# Legacy Contract Address (for backward compatibility)
 VITE_WALLET_MANAGER_CONTRACT_ADDRESS=0xd1d8344642d3dEFa36167f48f90E0D5a557A80b3
 ```
+
+**🚀 Deploy Your Own WalletX Contract:**
+Follow the [WalletX Deployment Guide](WALLETX_DEPLOYMENT.md) to deploy your own escrow contract.
 
 **📋 Copy from .env.example:**
 ```bash
@@ -235,17 +257,19 @@ npm run build
 
 ## 🎯 **Roadmap & Future Plans**
 
-### **Phase 1: Somnia Foundation** ✅
+### **Phase 1: Foundation** ✅
 - [x] Somnia blockchain integration
-- [x] Smart contract deployment
+- [x] Basic smart contract deployment
 - [x] Core wallet functionality
-- [x] Transaction management
+- [x] Standard transaction management
 
-### **Phase 2: Advanced Features** 🚧
-- [ ] Multi-wallet support
-- [ ] Enhanced transaction history
-- [ ] DApp integration
-- [ ] NFT support
+### **Phase 2: Escrow Revolution** ✅
+- [x] WalletX escrow smart contract
+- [x] Secure fund holding system
+- [x] Claim and refund mechanisms
+- [x] Advanced transaction history
+- [x] Tabbed interface with pending actions
+- [x] Real-time escrow status tracking
 
 ### **Phase 3: Advanced Features** 📋
 - [ ] DeFi protocol integration

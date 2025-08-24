@@ -3,7 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Send, RefreshCw, Copy } from 'lucide-react'
 import toast from 'react-hot-toast'
 import EVMTransaction from './EVMTransaction'
+import EscrowTransaction from './EscrowTransaction'
 import { isEVMCompatible } from '../../lib/networks'
+import { WALLETX_CONTRACT_ADDRESS } from '../../lib/contractUtils'
 
 function TransactionPage() {
     const { blockchain, address } = useParams()
@@ -79,7 +81,7 @@ function TransactionPage() {
                 </div>
 
                 {/* Wallet Info */}
-                <div className="w-full max-w-2xl mx-auto mb-6 sm:mb-8">
+                <div className="w-full max-w-4xl mx-auto mb-6 sm:mb-8">
                     <div className="relative">
                         <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-purple-400/20 rounded-xl blur opacity-75"></div>
                         <div className="relative bg-neutral-900/50 backdrop-blur-sm border border-neutral-700 rounded-xl p-6 md:p-8">
@@ -121,7 +123,12 @@ function TransactionPage() {
 
                 {/* Transaction Component */}
                 {blockchain && isEVMCompatible(blockchain) && (
-                    <EVMTransaction walletData={walletData} blockchain={blockchain} />
+                    // Use EscrowTransaction if WalletX contract is configured, otherwise use EVMTransaction
+                    WALLETX_CONTRACT_ADDRESS && WALLETX_CONTRACT_ADDRESS !== "0xYourWalletXContractAddress" ? (
+                        <EscrowTransaction walletData={walletData} blockchain={blockchain} />
+                    ) : (
+                        <EVMTransaction walletData={walletData} blockchain={blockchain} />
+                    )
                 )}
             </div>
         </div>

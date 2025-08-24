@@ -10,7 +10,7 @@ import {
   sendETHThroughContract,
   WALLET_MANAGER_ADDRESS 
 } from '../../lib/contractUtils'
-import baseLogo from '../../assests/base-logo.svg'
+import baseLogo from '../../assests/logo.svg'
 import polygonLogo from '../../assests/polygon-matic-logo.svg'
 import avalancheLogo from '../../assests/avalanche-avax-logo.svg'
 import bnbLogo from '../../assests/binance-coin-bnb-logo.svg'
@@ -34,7 +34,7 @@ function EVMTransaction({ walletData, blockchain }) {
   const [sendForm, setSendForm] = useState({
     to: '',
     amount: '',
-    gasLimit: '21000'
+    gasLimit: '300000' // Increased default gas limit to handle contract interactions
   })
   const [sending, setSending] = useState(false)
   const [transactionStatus, setTransactionStatus] = useState('')
@@ -43,6 +43,14 @@ function EVMTransaction({ walletData, blockchain }) {
   const [useContract, setUseContract] = useState(() => {
     return blockchain === 'somnia' && network === 'testnet' && WALLET_MANAGER_ADDRESS
   })
+  
+  // Update gas limit when contract mode changes
+  useEffect(() => {
+    setSendForm(prev => ({
+      ...prev,
+      gasLimit: useContract ? '300000' : '21000'
+    }))
+  }, [useContract])
 
   const blockchainConfig = getBlockchainConfig(blockchain)
   const currentNetworkConfig = getNetworkConfig(blockchain, network)
@@ -176,7 +184,8 @@ function EVMTransaction({ walletData, blockchain }) {
           network,
           walletData.privateKey,
           sendForm.to,
-          sendForm.amount
+          sendForm.amount,
+          sendForm.gasLimit // Pass the gas limit to the contract function
         )
       } else {
         // Send transaction using universal EVM function
@@ -200,7 +209,7 @@ function EVMTransaction({ walletData, blockchain }) {
       toast.success(`🎉 Transaction confirmed in block ${receipt.blockNumber}`)
 
       // Reset form and refresh data
-      setSendForm({ to: '', amount: '', gasLimit: '21000' })
+      setSendForm({ to: '', amount: '', gasLimit: '300000' })
 
       // Auto-refresh balance and transaction history
       await fetchBalance()
@@ -254,7 +263,7 @@ function EVMTransaction({ walletData, blockchain }) {
 
   const handleNetworkChange = (newNetwork) => {
     setNetwork(newNetwork)
-    setSendForm({ to: '', amount: '', gasLimit: '21000' })
+    setSendForm({ to: '', amount: '', gasLimit: '300000' })
     
     // Auto-enable contract mode for Somnia testnet
     const shouldUseContract = blockchain === 'somnia' && newNetwork === 'testnet' && WALLET_MANAGER_ADDRESS
@@ -475,13 +484,13 @@ function EVMTransaction({ walletData, blockchain }) {
                   </label>
                   <input
                     type="number"
-                    min="21000"
+                    min={useContract ? "300000" : "21000"}
                     value={sendForm.gasLimit}
                     onChange={(e) => handleInputChange('gasLimit', e.target.value)}
                     className="w-full px-4 py-3 border border-neutral-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-neutral-800/50 text-gray-200 placeholder-gray-400 transition-all duration-200 hover:border-neutral-500"
                   />
                   <p className="text-xs text-gray-400 mt-2 font-geist">
-                    Standard: 21,000
+                    {useContract ? 'Contract interactions: 300,000' : 'Standard transfers: 21,000'}
                   </p>
                 </div>
               </div>

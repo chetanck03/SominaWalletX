@@ -3,7 +3,7 @@ import { CheckCircle, Network } from 'lucide-react';
 
 // We'll use a generic blockchain icon since we don't have a specific Somnia logo
 // You can replace this with a Somnia logo if available later
-import baseLogo from '../assests/base-logo.svg';
+import baseLogo from '../assests/logo.svg';
 const BlockchainCarousel = () => {
     const somniaNetworks = [
         {

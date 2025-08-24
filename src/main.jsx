@@ -13,6 +13,11 @@ if (typeof global === 'undefined') {
   window.global = globalThis
 }
 
+// Load escrow tests in development mode
+if (import.meta.env.DEV) {
+  import('./lib/escrowTest.js').catch(console.error)
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
