@@ -7,19 +7,23 @@ function FAQ() {
   const faqs = [
     {
       question: "What makes WalletX's EVM Shared Seed technology revolutionary?",
-      answer: "WalletX introduces industry-first EVM Shared Seed technology designed so one seed phrase will generate identical wallet addresses across all EVM-compatible chains (Ethereum, Base, Polygon, Avalanche, BNB Smart Chain). Currently supporting Base, with additional EVM chains coming soon. This will mean your wallet address is exactly the same on all EVM chains, simplifying multi-chain management while maintaining full BIP-44 compliance."
+      answer: "WalletX introduces industry-first EVM Shared Seed technology designed so one seed phrase will generate identical wallet addresses across all EVM-compatible chains (Ethereum, Somnia, Polygon, Avalanche, BNB Smart Chain). Currently supporting Somnia, with additional EVM chains coming soon. This will mean your wallet address is exactly the same on all EVM chains, simplifying multi-chain management while maintaining full BIP-44 compliance."
     },
     {
       question: "Which blockchain networks does WalletX support?",
-      answer: "WalletX currently supports Base (Mainnet & Sepolia testnet) with 5 additional major blockchain networks planned for future releases: Ethereum, Polygon, Avalanche, BNB Smart Chain, and Solana. All EVM chains will share the same seed phrase technology, while Solana will use dedicated Ed25519 cryptography when implemented."
+      answer: "WalletX currently supports Somnia Blockchain (Mainnet & Shannon Testnet with Chain ID 50312) with 5 additional major blockchain networks planned for future releases: Ethereum, Polygon, Avalanche, BNB Smart Chain, and Solana. All EVM chains will share the same seed phrase technology, while Solana will use dedicated Ed25519 cryptography when implemented."
+    },
+    {
+      question: "How does the escrow system work and is it secure?",
+      answer: "WalletX features a built-in smart contract escrow system on Somnia Blockchain that enables secure fund transfers between parties. Funds are held in transparent, audited smart contracts with automatic release conditions, dispute resolution mechanisms, and complete transaction transparency. Perfect for freelance payments, marketplace transactions, or any situation requiring trusted fund management with enterprise-level security."
     },
     {
       question: "How secure is WalletX and where are my private keys stored?",
-      answer: "WalletX employs enterprise-grade security with complete client-side cryptographic operations. Your private keys never leave your browser and are stored locally with encryption. We use industry-standard BIP-39/BIP-44 compliance, Web Crypto API for secure random generation, and zero data collection policy. All cryptographic operations happen locally using ethers.js and @solana/web3.js."
+      answer: "WalletX employs enterprise-grade security with complete client-side cryptographic operations. Your private keys never leave your browser and are stored locally with encryption. We use industry-standard BIP-39/BIP-44 compliance, Web Crypto API for secure random generation, and zero data collection policy. All cryptographic operations happen locally using ethers.js and secure smart contract interactions on Somnia Blockchain."
     },
     {
       question: "What are temporary wallets and how do they work?",
-      answer: "Temporary wallets are like disposable phone numbers or burner emails, but for cryptocurrency. They're perfect for testing, development, privacy-focused transactions, airdrops, or when you need instant blockchain access without compromising your main wallets. You can generate unlimited HD wallets from a single seed phrase or create fresh ones as needed."
+      answer: "Temporary wallets are like disposable phone numbers or burner emails, but for cryptocurrency. They're perfect for testing, development, privacy-focused transactions, escrow agreements, airdrops, or when you need instant blockchain access without compromising your main wallets. You can generate unlimited HD wallets from a single seed phrase or create fresh ones as needed."
     },
     {
       question: "Can I import existing wallets from MetaMask, Phantom, or other wallets?",
@@ -27,15 +31,15 @@ function FAQ() {
     },
     {
       question: "How does the transaction system work?",
-      answer: "WalletX provides comprehensive transaction management for Base blockchain, with multi-chain support planned for future releases. You can send native ETH tokens with custom gas settings, switch seamlessly between mainnet and testnet, access integrated testnet faucets for free development tokens, and view complete transaction history with blockchain explorer integration. Additional networks (Ethereum, Polygon, Avalanche, BNB Smart Chain, Solana) coming soon."
+      answer: "WalletX provides comprehensive transaction management for Somnia Blockchain, with multi-chain support planned for future releases. You can send native STT tokens with custom gas settings, switch seamlessly between mainnet and testnet, access integrated testnet faucets for free development tokens, create secure escrow agreements, and view complete transaction history with blockchain explorer integration. Additional networks (Ethereum, Polygon, Avalanche, BNB Smart Chain, Solana) coming soon."
     },
     {
       question: "Is WalletX completely free to use?",
-      answer: "Yes, WalletX is completely free and open source under MIT license. There are no subscription fees, hidden costs, or premium features. You only pay standard blockchain network fees (gas fees) when making transactions. The platform generates revenue through optional donations and potential future premium enterprise features."
+      answer: "Yes, WalletX is completely free and open source under MIT license. There are no subscription fees, hidden costs, or premium features. You only pay standard blockchain network fees (gas fees) when making transactions or using escrow services. The platform generates revenue through optional donations and potential future premium enterprise features."
     },
     {
       question: "What's the difference between mainnet and testnet, and why should I use testnets?",
-      answer: "Mainnets are live blockchain networks where transactions use real cryptocurrency with real value. Testnets are sandbox environments with free test tokens for development and experimentation. WalletX includes integrated testnet faucets for Base (with more networks coming soon), making it perfect for developers testing dApps, learning blockchain development, or trying new features risk-free."
+      answer: "Mainnets are live blockchain networks where transactions use real cryptocurrency with real value. Testnets are sandbox environments with free test tokens for development and experimentation. WalletX includes integrated testnet faucets for Somnia Shannon Testnet (with more networks coming soon), making it perfect for developers testing dApps, learning blockchain development, or trying escrow features risk-free."
     },
     {
       question: "How does WalletX ensure compatibility with existing wallet infrastructure?",
@@ -43,7 +47,7 @@ function FAQ() {
     },
     {
       question: "Can I use WalletX for DeFi, NFTs, and other Web3 applications?",
-      answer: "Absolutely! WalletX-generated wallets are fully compatible with all Web3 applications, DeFi protocols, NFT marketplaces, and dApps on Base blockchain, with additional network support coming soon. Since we use standard wallet formats and derivation paths, you can connect to Base-compatible applications and thousands of other Web3 applications seamlessly once multi-chain support is implemented."
+      answer: "Absolutely! WalletX-generated wallets are fully compatible with all Web3 applications, DeFi protocols, NFT marketplaces, and dApps on Somnia Blockchain, with additional network support coming soon. Since we use standard wallet formats and derivation paths, you can connect to Somnia-compatible applications and thousands of other Web3 applications seamlessly once multi-chain support is implemented. The integrated escrow system also enables secure DeFi interactions and NFT marketplace transactions."
     }
   ]
 

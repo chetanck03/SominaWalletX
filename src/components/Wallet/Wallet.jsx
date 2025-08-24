@@ -14,7 +14,7 @@ function Wallet({ blockchain }) {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-            {/* Render Base Blockchain Component */}
+            {/* Render EVM-Compatible Blockchain Component */}
             {selectedBlockchain && isEVMCompatible(selectedBlockchain) && (
                 <EVMWallet blockchain={selectedBlockchain} />
             )}

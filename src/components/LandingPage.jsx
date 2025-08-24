@@ -26,15 +26,16 @@ function LandingPage() {
   const logoContainerRef = useRef(null)
 
   const benefits = [
-    "Generate cryptographically secure HD wallets instantly for Base blockchain",
+    "Generate cryptographically secure HD wallets instantly for Somnia Blockchain",
     "Revolutionary EVM shared seed technology ready for multi-chain expansion",
-    "Currently supporting Base with Ethereum, Polygon, Avalanche, BNB Smart Chain & Solana coming soon",
+    "Currently supporting Somnia with Ethereum, Polygon, Avalanche, BNB Smart Chain & Solana coming soon",
     "Import existing wallets with 12/24-word mnemonic validation",
     "Create unlimited addresses from single seed or generate fresh ones",
     "Seamless network switching between mainnets and testnets",
     "Integrated testnet faucets for free development tokens",
     "Complete transaction history with blockchain explorer integration",
     "Advanced temporary wallet features for maximum privacy",
+    "Secure escrow system for protected fund transfers and agreements",
     "Zero data collection - everything stays secure in your browser",
     "Professional-grade BIP39/BIP44 compliance with industry standards",
     "Future-ready architecture for cross-chain portfolio management"
@@ -105,7 +106,7 @@ function LandingPage() {
               </h2>
 
               <p className="mx-auto max-w-3xl text-xs sm:text-lg text-gray-300 leading-relaxed px-4">
-                Easily create or import Hierarchical Deterministic (HD) wallets, manage multiple addresses from a single seed phrase, and interact with <span className='text-purple-400 font-semibold'>Base Blockchain</span> — all within a secure, non-custodial platform supporting both testnet and mainnet networks. <span className="text-purple-400 font-semibold">More blockchains coming soon!</span>
+                Easily create or import Hierarchical Deterministic (HD) wallets, manage multiple addresses from a single seed phrase, create secure escrow agreements, and interact with <span className='text-purple-400 font-semibold'>Somnia Blockchain</span> — all within a secure, non-custodial platform supporting both testnet and mainnet networks. <span className="text-purple-400 font-semibold">More blockchains coming soon!</span>
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center  sm:gap-4 pt-4">
@@ -183,8 +184,8 @@ function LandingPage() {
                 </span>
               </h2>
               <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                Build and manage HD wallets with seed phrase generation, currently supporting Base blockchain with multi-blockchain expansion planned,
-                network switching, transaction management, and complete explorer integration - all in one platform.
+                Build and manage HD wallets with seed phrase generation, currently supporting Somnia Blockchain with multi-blockchain expansion planned,
+                network switching, transaction management, secure escrow functionality, and complete explorer integration - all in one platform.
               </p>
 
               <div className="space-y-4">
@@ -308,7 +309,7 @@ function LandingPage() {
                 {/* Bottom text */}
                 <div className="px-8 pb-6">
                   <p className="text-center text-gray-400 text-sm">
-                    Currently supporting Base blockchain with multiple networks planned for future releases
+                    Currently supporting Somnia Blockchain with multiple networks planned for future releases
                   </p>
                 </div>
               </div>

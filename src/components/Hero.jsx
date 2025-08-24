@@ -10,7 +10,7 @@ function Hero() {
             WalletX
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            Your secure, multi-blockchain wallet manager. Generate, store, and manage your crypto wallets with ease.
+            Your secure, multi-blockchain wallet manager powered by Somnia Blockchain. Generate, store, and manage your crypto wallets with advanced escrow functionality.
           </p>
         </div>
         <Wallet/>

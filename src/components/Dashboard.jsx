@@ -90,12 +90,10 @@ function Dashboard() {
                 Somnia
               </span>
             </h2>
-            <p className="text-sm md:text-lg text-gray-400 mb-4">
-              Currently supporting Somnia blockchain with more blockchains coming soon. Experience the power of Somnia - a high-performance blockchain supporting over 1 million transactions per second.
-            </p>
+          
 
             {/* Somnia Blockchain Info */}
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600/10 to-neutral-800/20 border border-purple-500/20 rounded-xl p-4 sm:p-6 mb-8">
+            <div className="max-w-4xl mt-8 mx-auto bg-gradient-to-r from-purple-600/10 to-neutral-800/20 border border-purple-500/20 rounded-xl p-4 sm:p-6 mb-8">
               <div className="flex flex-col sm:flex-row items-start gap-3">
                 <div className="flex items-center gap-2 text-purple-400 mt-1 flex-shrink-0">
                   <Link className="h-4 w-4 sm:h-5 sm:w-5" />

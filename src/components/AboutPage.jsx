@@ -8,15 +8,15 @@ import {
 
 function AboutPage() {
   const benefits = [
-    "Generate cryptographically secure HD wallets instantly for Base blockchain",
+    "Generate cryptographically secure HD wallets instantly for Somnia Blockchain",
     "Revolutionary EVM shared seed technology ready for multi-chain expansion",
-    "Currently supporting Base with Ethereum, Polygon, Avalanche, BNB Smart Chain & Solana coming soon",
+    "Currently supporting Somnia with Ethereum, Polygon, Avalanche, BNB Smart Chain & Solana coming soon",
     "Import existing wallets with 12/24-word mnemonic validation",
     "Create unlimited addresses from single seed or generate fresh ones",
-    "Seamless network switching between mainnets and testnets",
     "Integrated testnet faucets for free development tokens",
     "Complete transaction history with blockchain explorer integration",
     "Advanced temporary wallet features for maximum privacy",
+    "Secure escrow system for protected fund transfers and agreements",
     "Zero data collection - everything stays secure in your browser",
     "Professional-grade BIP39/BIP44 compliance with industry standards",
     "Future-ready architecture for cross-chain portfolio management"
@@ -49,14 +49,14 @@ function AboutPage() {
 
               <p className="text-sm md:text-lg text-gray-300 mb-6 leading-relaxed max-w-4xl mx-auto">
                 WalletX revolutionizes cryptocurrency access with advanced temporary wallet technology, currently supporting 
-                <span className="text-purple-400 font-semibold"> Base blockchain</span> with <span className="text-purple-400 font-semibold">6 major blockchain networks planned for future releases</span>. 
+                <span className="text-purple-400 font-semibold"> Somnia Blockchain</span> with <span className="text-purple-400 font-semibold">6 major blockchain networks planned for future releases</span>. 
                 Like temporary phone numbers or disposable emails, but for crypto - offering professional-grade
-                HD wallet generation, revolutionary EVM shared seed technology, and complete transaction management.
+                HD wallet generation, revolutionary EVM shared seed technology, complete transaction management, and secure escrow functionality.
               </p>
 
               <p className="text-sm md:text-lg text-gray-400 mb-8 leading-relaxed max-w-3xl mx-auto">
-                Currently supporting <span className="text-purple-400 font-semibold">Base blockchain</span> with <span className="text-purple-400 font-semibold">Ethereum, Polygon, Avalanche, BNB Smart Chain, and Solana coming soon</span> - 
-                perfect for testing, development, privacy-focused transactions, or when you need instant blockchain access
+                Currently supporting <span className="text-purple-400 font-semibold">Somnia Blockchain</span> with <span className="text-purple-400 font-semibold">Ethereum, Polygon, Avalanche, BNB Smart Chain, and Solana coming soon</span> - 
+                perfect for testing, development, privacy-focused transactions, secure escrow agreements, or when you need instant blockchain access
                 without compromising your main wallets. Built with enterprise-level security and zero data collection.
               </p>
 
@@ -96,19 +96,19 @@ function AboutPage() {
               <p className="text-sm md:text-lg text-gray-300 mb-6 leading-relaxed">
                 In the digital age, we use temporary phone numbers for privacy, disposable emails for security,
                 and burner accounts for anonymity. WalletX brings this revolutionary concept to cryptocurrency with
-                professional-grade temporary wallets, currently supporting <span className="text-purple-400 font-semibold">Base blockchain</span> with <span className="text-purple-400 font-semibold">6 major blockchain networks planned</span> 
+                professional-grade temporary wallets, currently supporting <span className="text-purple-400 font-semibold">Somnia Blockchain</span> with <span className="text-purple-400 font-semibold">6 major blockchain networks planned</span> 
                 that don't compromise on features or security.
               </p>
               <p className="text-sm md:text-lg text-gray-300 mb-6 leading-relaxed">
                 Our groundbreaking <span className="text-purple-400 font-semibold">EVM Shared Seed technology</span> is designed so that 
-                one seed phrase will generate the same wallet addresses across Ethereum, Base, Polygon, Avalanche, and BNB Smart Chain when fully implemented. 
-                Currently supporting Base, with additional EVM chains coming soon. Whether you're a developer testing dApps, a privacy-conscious user making anonymous
-                transactions, or someone who needs instant blockchain access, WalletX provides the perfect solution.
+                one seed phrase will generate the same wallet addresses across Ethereum, Somnia, Polygon, Avalanche, and BNB Smart Chain when fully implemented. 
+                Currently supporting Somnia, with additional EVM chains coming soon. Whether you're a developer testing dApps, a privacy-conscious user making anonymous
+                transactions, someone who needs secure escrow agreements, or instant blockchain access, WalletX provides the perfect solution.
               </p>
               <p className="text-sm md:text-lg text-gray-300 mb-8 leading-relaxed">
-                Built with enterprise-level security, industry-standard BIP39/BIP44 cryptographic methods, and zero data collection,
+                Built with enterprise-level security, industry-standard BIP39/BIP44 cryptographic methods, integrated escrow system for secure fund transfers, and zero data collection,
                 WalletX bridges the gap between temporary convenience and professional multi-chain functionality.
-                Experience the future of cross-chain wallet management today.
+                Experience the future of cross-chain wallet management and secure transactions today.
               </p>
 
 
@@ -152,6 +152,18 @@ function AboutPage() {
                   <p className="text-gray-400  text-sm md:text-lg leading-relaxed ml-9">
                     Create isolated wallets for dApp testing, smart contract interactions, and blockchain development
                     without risking your main funds. Perfect for developers who need clean testing environments.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
+                    <Lock className="h-6 w-6 text-green-500 mr-3" />
+                    Secure Escrow System
+                  </h3>
+                  <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9">
+                    Built-in smart contract escrow system enables secure fund transfers between parties. Create escrow agreements
+                    with automatic fund release conditions, dispute resolution mechanisms, and complete transaction transparency.
+                    Perfect for freelance payments, marketplace transactions, or any situation requiring trusted fund management.
                   </p>
                 </div>
 
@@ -216,6 +228,17 @@ function AboutPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
                     <ShieldCheck className="h-6 w-6 text-green-400 mr-3" />
+                    Smart Contract Escrow
+                  </h3>
+                  <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9">
+                    Secure escrow system powered by audited smart contracts on Somnia Blockchain. Funds are held in
+                    transparent, immutable contracts with automatic release conditions and dispute resolution mechanisms.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
+                    <ShieldCheck className="h-6 w-6 text-green-400 mr-3" />
                     Client-Side Security
                   </h3>
                   <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9">
@@ -276,32 +299,47 @@ function AboutPage() {
               <p className="text-sm md:text-lg text-gray-300 mb-8 leading-relaxed">
                 WalletX is built on a foundation of modern web technologies and industry-standard blockchain libraries.
                 Our architecture prioritizes performance, security, and compatibility while maintaining the flexibility
-                to support multiple blockchain networks seamlessly.
+                to support multiple blockchain networks seamlessly. Integrated with Somnia's high-performance blockchain
+                for ultra-fast transactions and robust smart contract escrow functionality.
               </p>
 
               <div className="text-left space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
                     <Cpu className="h-6 w-6 text-blue-500 mr-3" />
-                    Ethereum Integration
+                    Somnia Blockchain Integration
                   </h3>
                   <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9 mb-2">
-                    Built with ethers.js v6.15.0 for robust Ethereum interaction. Full support for EIP-155 chain IDs,
-                    EIP-1559 gas fees, and seamless MetaMask compatibility ensures your Ethereum experience is smooth and reliable.
+                    Built on Somnia's high-performance blockchain supporting over 1 million transactions per second.
+                    Native integration with Somnia Shannon Testnet (Chain ID: 50312) for development and testing,
+                    with mainnet support planned for production deployment.
                   </p>
-                  <div className="text-sm text-blue-400 font-mono ml-9">ethers.js, JSON-RPC, EIP standards</div>
+                  <div className="text-sm text-blue-400 font-mono ml-9">Somnia RPC, Chain ID: 50312, 1M+ TPS</div>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
                     <Server className="h-6 w-6 text-purple-500 mr-3" />
-                    Solana Integration
+                    Smart Contract Escrow
                   </h3>
                   <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9 mb-2">
-                    Native Solana support using @solana/web3.js with Ed25519 signatures. Full SPL token compatibility
-                    and Phantom wallet integration provide comprehensive Solana ecosystem support.
+                    Custom WalletX smart contract deployed on Somnia Blockchain provides secure escrow functionality.
+                    Automated fund management, transparent transaction tracking, and dispute resolution mechanisms
+                    ensure safe and reliable fund transfers between parties.
                   </p>
-                  <div className="text-sm text-blue-400 font-mono ml-9">@solana/web3.js, Ed25519, SPL tokens</div>
+                  <div className="text-sm text-blue-400 font-mono ml-9">Solidity, OpenZeppelin, Escrow Patterns</div>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
+                    <Server className="h-6 w-6 text-purple-500 mr-3" />
+                    EVM Compatibility
+                  </h3>
+                  <p className="text-gray-400 text-sm md:text-lg leading-relaxed ml-9 mb-2">
+                    Full EVM compatibility with ethers.js v6.15.0 for robust blockchain interaction. Support for EIP-155 chain IDs,
+                    EIP-1559 gas fees, and seamless MetaMask compatibility across all EVM-compatible networks.
+                  </p>
+                  <div className="text-sm text-blue-400 font-mono ml-9">ethers.js, JSON-RPC, EIP standards</div>
                 </div>
 
                 <div>

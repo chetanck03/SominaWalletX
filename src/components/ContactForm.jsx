@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Send, Mail, MessageSquare, MapPin, Clock, Phone } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 // ContactForm component that can be used both as a section and as a full page
 function ContactForm({ isFullPage = false }) {
@@ -28,7 +29,7 @@ function ContactForm({ isFullPage = false }) {
       message: ''
     })
     // Show success message (you can implement this)
-    alert('Thank you for your message! We\'ll get back to you soon.')
+    toast('Thank you for your message! We\'ll get back to you soon.')
   }
 
   const contactMethods = [
@@ -36,15 +37,15 @@ function ContactForm({ isFullPage = false }) {
       icon: <Mail className="h-5 w-5" />,
       title: "Email",
       description: "Get in touch via email",
-      contact: "hello@walletx.com",
-      action: "mailto:hello@walletx.com"
+      contact: "cktechhuborg@gmail.com",
+      action: "mailto:cktechhuborg@gmail.com"
     },
     {
       icon: <MessageSquare className="h-5 w-5" />,
-      title: "Discord",
+      title: "Telegram",
       description: "Join our community",
       contact: "Join Community",
-      action: "https://discord.com"
+      action: "https://t.me/cktechhub"
     }
   ]
 
