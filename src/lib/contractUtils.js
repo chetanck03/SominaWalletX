@@ -39,6 +39,7 @@ export {
     storeEscrowTransaction,
     updateEscrowStatus,
     getEscrowTransactionHistory,
+    getEscrowTransactionHistoryWithRealTimeStatus,
     debugEscrowTransactions,
     clearEscrowHistory
 } from './escrowStorage'

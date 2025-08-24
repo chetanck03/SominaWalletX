@@ -23,6 +23,7 @@ import {
   claimEscrow,
   refundEscrow,
   getEscrowTransactionHistory,
+  getEscrowTransactionHistoryWithRealTimeStatus,
   getPendingActions,
   getEscrowDetails,
   getEscrowStatusText,
@@ -114,16 +115,17 @@ function EscrowTransaction({ walletData, blockchain }) {
 
   const fetchEscrowData = async (showToast = true) => {
     try {
-      console.log('🔄 Fetching escrow data - including cached history and fresh contract data')
+      console.log('🔄 Fetching escrow data - including real-time status updates from blockchain')
       
-      // First, get cached escrow history from localStorage
-      const cachedHistory = await getEscrowTransactionHistory(blockchain, network, walletData.publicKey, 50)
-      console.log(`📦 Found ${cachedHistory.length} cached transactions`)
-      setEscrowHistory(cachedHistory)
+      // Get escrow history with real-time status updates from blockchain
+      console.log('📡 Fetching escrow history with real-time status from contract...')
+      const historyWithUpdatedStatus = await getEscrowTransactionHistoryWithRealTimeStatus(blockchain, network, walletData.publicKey, 50)
+      console.log(`📦 Found ${historyWithUpdatedStatus.length} transactions with updated status`)
+      setEscrowHistory(historyWithUpdatedStatus)
 
-      // Then fetch fresh data from contract for pending actions and any updates
+      // Fetch fresh pending actions from contract
       try {
-        console.log('🌐 Fetching fresh data from contract...')
+        console.log('🌐 Fetching fresh pending actions from contract...')
         
         // Fetch pending actions from contract
         console.log('Fetching pending actions for wallet:', walletData.publicKey)
@@ -146,27 +148,33 @@ function EscrowTransaction({ walletData, blockchain }) {
           setPendingActions({ claimable: [], refundable: [] })
         }
         
-        // For complete refresh, we could also check if there are any new transactions
-        // that aren't in our cached history and update the cache accordingly
         console.log('✅ Fresh contract data fetched successfully')
         
         // Show success message to user
         if (showToast) {
-          toast.success('🔄 Data refreshed successfully!')
+          toast.success('🔄 Data refreshed with real-time status!')
         }
         
       } catch (actionsError) {
         console.error('❌ Error fetching fresh contract data:', actionsError)
-        // Set empty arrays to avoid UI errors, but keep cached history
+        // Set empty arrays to avoid UI errors, but keep updated history
         setPendingActions({ claimable: [], refundable: [] })
         if (showToast) {
           toast.error(`Failed to fetch fresh data: ${actionsError.message}`)
         }
       }
       
-      console.log('🎉 Escrow data refresh completed')
+      console.log('🎉 Escrow data refresh with real-time status completed')
     } catch (error) {
       console.error('❌ Error in fetchEscrowData:', error)
+      // Fallback to cached data if real-time fetch fails
+      try {
+        console.log('🔄 Falling back to cached escrow history...')
+        const cachedHistory = await getEscrowTransactionHistory(blockchain, network, walletData.publicKey, 50)
+        setEscrowHistory(cachedHistory)
+      } catch (fallbackError) {
+        console.error('❌ Fallback also failed:', fallbackError)
+      }
       if (showToast) {
         toast.error(`Failed to fetch escrow data: ${error.message}`)
       }

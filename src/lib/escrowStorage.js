@@ -4,6 +4,7 @@
  */
 
 import { EscrowStatus } from './contractConfig'
+import { getEscrowDetails } from './contractData'
 
 /**
  * Store escrow transaction details in localStorage
@@ -92,6 +93,60 @@ export const getEscrowTransactionHistory = (blockchain, network, address, limit 
     } catch (error) {
         console.error("Error fetching escrow transaction history:", error)
         return []
+    }
+}
+
+/**
+ * Get escrow transaction history with real-time status updates from blockchain
+ * @param {string} blockchain - The blockchain name
+ * @param {string} network - The network name
+ * @param {string} address - The wallet address
+ * @param {number} limit - Maximum number of transactions (0 for all)
+ * @returns {Promise<Array>} Array of escrow transactions with updated status
+ */
+export const getEscrowTransactionHistoryWithRealTimeStatus = async (blockchain, network, address, limit = 50) => {
+    try {
+        // Get cached escrow transactions
+        const cachedTxs = getEscrowTransactionHistory(blockchain, network, address, limit)
+        
+        console.log(`Refreshing status for ${cachedTxs.length} escrow transactions from blockchain...`)
+        
+        // Update status for each transaction that has an escrowId
+        const updatedTxs = await Promise.all(cachedTxs.map(async (tx) => {
+            // Only update status for transactions that have escrowId and are not already final
+            if (tx.escrowId && (tx.status === EscrowStatus.PENDING || tx.status === 0)) {
+                try {
+                    const escrowDetails = await getEscrowDetails(blockchain, network, tx.escrowId)
+                    if (escrowDetails && escrowDetails.status !== undefined) {
+                        // Update the cached transaction with real-time status
+                        const updatedTx = {
+                            ...tx,
+                            status: escrowDetails.status,
+                            lastStatusCheck: Math.floor(Date.now() / 1000)
+                        }
+                        
+                        // If status changed, update the cache
+                        if (tx.status !== escrowDetails.status) {
+                            console.log(`Status updated for escrow ${tx.escrowId}: ${tx.status} -> ${escrowDetails.status}`)
+                            updateEscrowStatus(blockchain, network, address, tx.escrowId, escrowDetails.status, tx.hash)
+                        }
+                        
+                        return updatedTx
+                    }
+                } catch (error) {
+                    console.error(`Failed to update status for escrow ${tx.escrowId}:`, error)
+                }
+            }
+            return tx
+        }))
+        
+        console.log(`Status refresh completed for ${address}`)
+        return updatedTxs
+        
+    } catch (error) {
+        console.error("Error fetching escrow transaction history with real-time status:", error)
+        // Fallback to cached data if blockchain query fails
+        return getEscrowTransactionHistory(blockchain, network, address, limit)
     }
 }
 
