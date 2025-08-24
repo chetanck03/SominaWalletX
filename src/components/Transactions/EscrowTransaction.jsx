@@ -68,7 +68,9 @@ function EscrowTransaction({ walletData, blockchain }) {
   // Escrow data
   const [escrowHistory, setEscrowHistory] = useState([])
   const [pendingActions, setPendingActions] = useState({ claimable: [], refundable: [] })
-  const [loadingActions, setLoadingActions] = useState(false)
+  const [loadingActions, setLoadingActions] = useState({})
+  const [refreshingPending, setRefreshingPending] = useState(false)
+  const [refreshingHistory, setRefreshingHistory] = useState(false)
 
   const blockchainConfig = getBlockchainConfig(blockchain)
   const currentNetworkConfig = getNetworkConfig(blockchain, network)
@@ -110,14 +112,20 @@ function EscrowTransaction({ walletData, blockchain }) {
     }
   }
 
-  const fetchEscrowData = async () => {
+  const fetchEscrowData = async (showToast = true) => {
     try {
-      // Fetch escrow history
-      const history = await getEscrowTransactionHistory(blockchain, network, walletData.publicKey, 50)
-      setEscrowHistory(history)
+      console.log('🔄 Fetching escrow data - including cached history and fresh contract data')
+      
+      // First, get cached escrow history from localStorage
+      const cachedHistory = await getEscrowTransactionHistory(blockchain, network, walletData.publicKey, 50)
+      console.log(`📦 Found ${cachedHistory.length} cached transactions`)
+      setEscrowHistory(cachedHistory)
 
+      // Then fetch fresh data from contract for pending actions and any updates
       try {
-        // Fetch pending actions
+        console.log('🌐 Fetching fresh data from contract...')
+        
+        // Fetch pending actions from contract
         console.log('Fetching pending actions for wallet:', walletData.publicKey)
         const actions = await getPendingActions(blockchain, network, walletData.publicKey)
         console.log('Pending actions fetched in component:', actions)
@@ -132,27 +140,43 @@ function EscrowTransaction({ walletData, blockchain }) {
             refundable
           })
           
-          console.log('Pending actions set in state:', { claimable, refundable })
+          console.log('✅ Pending actions updated:', { claimable, refundable })
         } else {
           console.error('Invalid pending actions structure:', actions)
           setPendingActions({ claimable: [], refundable: [] })
         }
+        
+        // For complete refresh, we could also check if there are any new transactions
+        // that aren't in our cached history and update the cache accordingly
+        console.log('✅ Fresh contract data fetched successfully')
+        
+        // Show success message to user
+        if (showToast) {
+          toast.success('🔄 Data refreshed successfully!')
+        }
+        
       } catch (actionsError) {
-        console.error('Error fetching pending actions:', actionsError)
-        // Set empty arrays to avoid UI errors
+        console.error('❌ Error fetching fresh contract data:', actionsError)
+        // Set empty arrays to avoid UI errors, but keep cached history
         setPendingActions({ claimable: [], refundable: [] })
-        toast.error(`Failed to fetch pending actions: ${actionsError.message}`)
+        if (showToast) {
+          toast.error(`Failed to fetch fresh data: ${actionsError.message}`)
+        }
       }
+      
+      console.log('🎉 Escrow data refresh completed')
     } catch (error) {
-      console.error('Error fetching escrow data:', error)
-      toast.error(`Failed to fetch escrow data: ${error.message}`)
+      console.error('❌ Error in fetchEscrowData:', error)
+      if (showToast) {
+        toast.error(`Failed to fetch escrow data: ${error.message}`)
+      }
     }
   }
 
   useEffect(() => {
     if (blockchainConfig) {
       fetchBalance()
-      fetchEscrowData()
+      fetchEscrowData(false) // Don't show toast on initial load
     }
     
     // Make debug function available in console
@@ -160,7 +184,28 @@ function EscrowTransaction({ walletData, blockchain }) {
       window.debugEscrow = (escrowId) => {
         return debugEscrow(blockchain, network, escrowId, walletData.publicKey)
       }
-      console.log('🔧 Debug helper available: window.debugEscrow(escrowId)')
+      
+      // Add debug helper for transaction history
+      window.debugEscrowHistory = () => {
+        const { debugEscrowTransactions } = require('../../lib/escrowStorage')
+        return debugEscrowTransactions(blockchain, network, walletData.publicKey)
+      }
+      
+      // Add debug helper for localStorage keys
+      window.debugEscrowStorage = () => {
+        const keys = Object.keys(localStorage).filter(key => key.includes('escrow_tx_history'))
+        console.log('🗂 Escrow storage keys found:', keys)
+        keys.forEach(key => {
+          const data = JSON.parse(localStorage.getItem(key) || '[]')
+          console.log(`📁 ${key}:`, data)
+        })
+        return keys
+      }
+      
+      console.log('🔧 Debug helpers available:')
+      console.log('  - window.debugEscrow(escrowId) - Debug specific escrow')
+      console.log('  - window.debugEscrowHistory() - Show cached transaction history')
+      console.log('  - window.debugEscrowStorage() - Show all escrow storage keys')
     }
   }, [walletData.publicKey, network, blockchain])
 
@@ -169,7 +214,7 @@ function EscrowTransaction({ walletData, blockchain }) {
     const interval = setInterval(() => {
       if (!loading && !sending && blockchainConfig) {
         fetchBalance()
-        fetchEscrowData()
+        fetchEscrowData(false) // Don't show toast on auto-refresh
       }
     }, 30000)
 
@@ -234,7 +279,7 @@ function EscrowTransaction({ walletData, blockchain }) {
       // Reset form and refresh data
       setSendForm({ to: '', amount: '', gasLimit: '500000' })
       await fetchBalance()
-      await fetchEscrowData()
+      await fetchEscrowData(false)
 
     } catch (error) {
       console.error('Escrow creation error:', error)
@@ -249,7 +294,7 @@ function EscrowTransaction({ walletData, blockchain }) {
   }
 
   const handleClaimEscrow = async (escrowId) => {
-    setLoadingActions(true)
+    setLoadingActions(prev => ({ ...prev, [`claim-${escrowId}`]: true }))
     try {
       const txResponse = await claimEscrow(blockchain, network, walletData.privateKey, escrowId)
       toast.success(`Claim transaction sent! Hash: ${txResponse.hash}`)
@@ -272,17 +317,17 @@ function EscrowTransaction({ walletData, blockchain }) {
       }
       
       await fetchBalance()
-      await fetchEscrowData()
+      await fetchEscrowData(false)
     } catch (error) {
       console.error('Claim error:', error)
       toast.error(`Claim failed: ${error.message}`)
     } finally {
-      setLoadingActions(false)
+      setLoadingActions(prev => ({ ...prev, [`claim-${escrowId}`]: false }))
     }
   }
 
   const handleRefundEscrow = async (escrowId) => {
-    setLoadingActions(true)
+    setLoadingActions(prev => ({ ...prev, [`refund-${escrowId}`]: true }))
     try {
       const txResponse = await refundEscrow(blockchain, network, walletData.privateKey, escrowId)
       toast.success(`Refund transaction sent! Hash: ${txResponse.hash}`)
@@ -305,12 +350,12 @@ function EscrowTransaction({ walletData, blockchain }) {
       }
       
       await fetchBalance()
-      await fetchEscrowData()
+      await fetchEscrowData(false)
     } catch (error) {
       console.error('Refund error:', error)
       toast.error(`Refund failed: ${error.message}`)
     } finally {
-      setLoadingActions(false)
+      setLoadingActions(prev => ({ ...prev, [`refund-${escrowId}`]: false }))
     }
   }
 
@@ -486,21 +531,31 @@ function EscrowTransaction({ walletData, blockchain }) {
               { id: 'send', label: 'Send Escrow', icon: Shield },
               { id: 'actions', label: 'Pending Actions', icon: Clock },
               { id: 'history', label: 'Transaction History', icon: History }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium ${
-                  activeTab === tab.id
-                    ? 'bg-purple-600/30 text-purple-300 border border-purple-500/50'
-                    : 'text-gray-400 hover:text-gray-300 hover:bg-neutral-800/50'
-                }`}
-              >
-                <tab.icon size={16} />
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-              </button>
-            ))}
+            ].map((tab) => {
+              const totalPending = pendingActions.claimable.length + pendingActions.refundable.length
+              const showBadge = tab.id === 'actions' && totalPending > 0
+              
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium relative ${
+                    activeTab === tab.id
+                      ? 'bg-purple-600/30 text-purple-300 border border-purple-500/50'
+                      : 'text-gray-400 hover:text-gray-300 hover:bg-neutral-800/50'
+                  }`}
+                >
+                  <tab.icon size={16} />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                  {showBadge && (
+                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5 animate-pulse">
+                      {totalPending}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -641,14 +696,32 @@ function EscrowTransaction({ walletData, blockchain }) {
         <div className="relative">
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-purple-400/20 rounded-xl blur opacity-75"></div>
           <div className="relative bg-neutral-900/50 backdrop-blur-sm border border-neutral-700 rounded-xl p-4 sm:p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-4 sm:mb-6">
-              <div className="relative inline-block overflow-hidden rounded-full p-[1px]">
-                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                <div className="inline-flex items-center w-10 h-10 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-400/20 border border-purple-500/30 justify-center bg-neutral-950 backdrop-blur-3xl">
-                  <Clock className="text-purple-400" size={20} />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
+              <div className="flex items-center gap-3">
+                <div className="relative inline-block overflow-hidden rounded-full p-[1px]">
+                  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                  <div className="inline-flex items-center w-10 h-10 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-400/20 border border-purple-500/30 justify-center bg-neutral-950 backdrop-blur-3xl">
+                    <Clock className="text-purple-400" size={20} />
+                  </div>
                 </div>
+                <h2 className="text-lg sm:text-xl font-semibold text-white font-geist">Pending Actions</h2>
+                {(pendingActions.claimable.length > 0 || pendingActions.refundable.length > 0) && (
+                  <span className="px-3 py-1 bg-purple-600/20 text-purple-400 text-sm font-medium rounded-full border border-purple-600/30">
+                    {pendingActions.claimable.length + pendingActions.refundable.length} pending
+                  </span>
+                )}
               </div>
-              <h2 className="text-lg sm:text-xl font-semibold text-white font-geist">Pending Actions</h2>
+              <button
+                onClick={() => {
+                  setRefreshingPending(true)
+                  fetchEscrowData(false).finally(() => setRefreshingPending(false))
+                }}
+                disabled={refreshingPending}
+                className="flex items-center gap-2 px-4 py-2.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 hover:text-purple-300 border border-purple-600/30 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium min-w-[100px] justify-center"
+              >
+                <RefreshCw className={refreshingPending ? 'animate-spin' : ''} size={16} />
+                <span>{refreshingPending ? 'Refreshing...' : 'Refresh'}</span>
+              </button>
             </div>
 
             <div className="space-y-6">
@@ -738,12 +811,15 @@ function EscrowTransaction({ walletData, blockchain }) {
                 <h2 className="text-lg sm:text-xl font-semibold text-white font-geist">Escrow History</h2>
               </div>
               <button
-                onClick={fetchEscrowData}
-                disabled={loading}
+                onClick={() => {
+                  setRefreshingHistory(true)
+                  fetchEscrowData(false).finally(() => setRefreshingHistory(false))
+                }}
+                disabled={refreshingHistory}
                 className="flex items-center gap-2 px-4 py-2.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 hover:text-purple-300 border border-purple-600/30 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium min-w-[100px] justify-center"
               >
-                <RefreshCw className={loading ? 'animate-spin' : ''} size={16} />
-                <span>Refresh</span>
+                <RefreshCw className={refreshingHistory ? 'animate-spin' : ''} size={16} />
+                <span>{refreshingHistory ? 'Refreshing...' : 'Refresh'}</span>
               </button>
             </div>
 
@@ -847,14 +923,14 @@ function EscrowActionCard({ escrowId, type, blockchain, network, onAction, loadi
       <div className="flex gap-2">
         <button
           onClick={() => onAction(escrowId)}
-          disabled={loading}
+          disabled={loading[`${type}-${escrowId}`]}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-sm font-medium border ${
             isClaimAction 
               ? 'bg-green-600/20 hover:bg-green-600/30 text-green-400 hover:text-green-300 border-green-600/30' 
               : 'bg-red-600/20 hover:bg-red-600/30 text-red-400 hover:text-red-300 border-red-600/30'
           }`}
         >
-          {loading ? (
+          {loading[`${type}-${escrowId}`] ? (
             <RefreshCw className="animate-spin" size={14} />
           ) : (
             isClaimAction ? <CheckCircle size={14} /> : <XCircle size={14} />
