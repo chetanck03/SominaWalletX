@@ -381,8 +381,6 @@ VITE_WALLETX_CONTRACT_ADDRESS=0xYourWalletXContractAddress
 
 ```
 
-**🚀 Deploy Your Own WalletX Contract:**
-Follow the [WalletX Deployment Guide](WALLETX_DEPLOYMENT.md) to deploy your own escrow contract.
 
 **📋 Copy from .env.example:**
 ```bash
