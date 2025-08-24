@@ -58,7 +58,7 @@ function EscrowTransaction({ walletData, blockchain }) {
   const [sendForm, setSendForm] = useState({
     to: '',
     amount: '',
-    gasLimit: '300000'
+    gasLimit: '500000' // Higher default for better reliability with complex contracts
   })
   
   const [sending, setSending] = useState(false)
@@ -223,7 +223,7 @@ function EscrowTransaction({ walletData, blockchain }) {
       toast.success(`🎉 Escrow confirmed in block ${receipt.blockNumber}`)
 
       // Reset form and refresh data
-      setSendForm({ to: '', amount: '', gasLimit: '300000' })
+      setSendForm({ to: '', amount: '', gasLimit: '500000' })
       await fetchBalance()
       await fetchEscrowData()
 
@@ -314,7 +314,7 @@ function EscrowTransaction({ walletData, blockchain }) {
 
   const handleNetworkChange = (newNetwork) => {
     setNetwork(newNetwork)
-    setSendForm({ to: '', amount: '', gasLimit: '300000' })
+    setSendForm({ to: '', amount: '', gasLimit: '500000' })
   }
 
   const openFaucet = () => {
@@ -560,17 +560,31 @@ function EscrowTransaction({ walletData, blockchain }) {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-3 font-geist">
                       Gas Limit
+                      <span className="text-xs text-gray-400 ml-2">(Auto-adjusted for complex contracts)</span>
                     </label>
-                    <input
-                      type="number"
-                      min="300000"
-                      value={sendForm.gasLimit}
-                      onChange={(e) => handleInputChange('gasLimit', e.target.value)}
-                      className="w-full px-4 py-3 border border-neutral-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-neutral-800/50 text-gray-200 placeholder-gray-400 transition-all duration-200 hover:border-neutral-500"
-                    />
-                    <p className="text-xs text-gray-400 mt-2 font-geist">
-                      Escrow creation: 300,000 gas
-                    </p>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min="300000"
+                        max="5000000"
+                        value={sendForm.gasLimit}
+                        onChange={(e) => handleInputChange('gasLimit', e.target.value)}
+                        className="w-full px-4 py-3 pr-20 border border-neutral-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-neutral-800/50 text-gray-200 placeholder-gray-400 transition-all duration-200 hover:border-neutral-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange('gasLimit', '500000')}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 text-xs hover:text-purple-300 bg-purple-600/20 hover:bg-purple-600/30 px-2 py-1 rounded transition-colors border border-purple-600/30"
+                        title="Set recommended gas for complex escrow contracts"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                    <div className="text-xs text-gray-400 mt-2 space-y-1">
+                      <p className="font-geist">• Simple escrow: 300,000 - 500,000 gas</p>
+                      <p className="font-geist">• Complex contracts: 500,000+ gas</p>
+                      <p className="font-geist text-yellow-400">⚠️ Gas will be auto-adjusted based on contract complexity</p>
+                    </div>
                   </div>
                 </div>
               </div>
